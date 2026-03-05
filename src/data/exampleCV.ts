@@ -1,0 +1,107 @@
+import { CV } from '../types/cv'
+
+export const EXAMPLE_CV: CV = {
+  personal: {
+    name: 'Alex Müller',
+    title: 'Software Engineer',
+    photo: '',
+    photoZoom: 1,
+    photoOffsetX: 0,
+    photoOffsetY: 0,
+    photoGrayscale: false,
+    email: 'alex.mueller@example.com',
+    phone: '+41 79 123 45 67',
+    address: 'Bahnhofstrasse 12',
+    zip: '8001',
+    city: 'Zürich',
+    country: 'Switzerland',
+    website: 'https://alexmueller.dev',
+    linkedin: 'https://linkedin.com/in/alexmueller',
+    github: 'https://github.com/alexmueller',
+    birthday: '1992-03-15',
+    nationality: 'Swiss',
+    driversLicense: 'B',
+    summary:
+      'Passionate software engineer with 6+ years of experience building modern web applications. Skilled in React, TypeScript, and cloud-native architectures. Strong communicator who thrives in cross-functional teams and enjoys mentoring junior developers.',
+  },
+  experience: [
+    {
+      id: 'ex-exp-1',
+      company: 'TechCorp AG',
+      role: 'Senior Frontend Engineer',
+      location: 'Zürich',
+      startDate: '2021-04',
+      endDate: '',
+      current: true,
+      bullets: [
+        'Led migration of legacy AngularJS app to React + TypeScript, improving performance by 40%',
+        'Designed and implemented a component library used across 3 product teams',
+        'Mentored 4 junior developers through code reviews and pair programming sessions',
+      ],
+    },
+    {
+      id: 'ex-exp-2',
+      company: 'WebSolutions GmbH',
+      role: 'Frontend Developer',
+      location: 'Bern',
+      startDate: '2018-09',
+      endDate: '2021-03',
+      current: false,
+      bullets: [
+        'Built responsive e-commerce platform serving 50k+ monthly users',
+        'Integrated REST and GraphQL APIs with React frontend',
+        'Reduced bundle size by 35% through code splitting and lazy loading',
+      ],
+    },
+  ],
+  education: [
+    {
+      id: 'ex-edu-1',
+      institution: 'ETH Zürich',
+      degree: 'MSc',
+      field: 'Computer Science',
+      startDate: '2016-09',
+      endDate: '2018-07',
+      grade: '5.6 / 6.0',
+    },
+    {
+      id: 'ex-edu-2',
+      institution: 'Universität Bern',
+      degree: 'BSc',
+      field: 'Computer Science',
+      startDate: '2012-09',
+      endDate: '2016-07',
+      grade: '',
+    },
+  ],
+  skills: [
+    {
+      id: 'ex-sk-1',
+      category: 'Frontend',
+      items: ['React', 'TypeScript', 'Next.js', 'Tailwind CSS', 'HTML/CSS'],
+      levels: { 'React': 9, 'TypeScript': 8, 'Next.js': 7, 'Tailwind CSS': 8, 'HTML/CSS': 9 },
+    },
+    {
+      id: 'ex-sk-2',
+      category: 'Backend & Tools',
+      items: ['Node.js', 'PostgreSQL', 'Docker', 'Git', 'CI/CD'],
+      levels: { 'Node.js': 7, 'PostgreSQL': 6, 'Docker': 7, 'Git': 9, 'CI/CD': 7 },
+    },
+  ],
+  languages: [
+    { id: 'ex-lang-1', language: 'German', level: 'Native' },
+    { id: 'ex-lang-2', language: 'English', level: 'C1' },
+    { id: 'ex-lang-3', language: 'French', level: 'B1' },
+  ],
+  projects: [],
+  certifications: [
+    {
+      id: 'ex-cert-1',
+      title: 'AWS Certified Developer – Associate',
+      institution: 'Amazon Web Services',
+      date: '2023-05',
+      description: '',
+    },
+  ],
+  interests: ['Hiking', 'Open Source', 'Photography'],
+}
