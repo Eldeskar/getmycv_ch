@@ -1,0 +1,24 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    volumes:
+      # Mount source for hot reload
+      - .:/app
+      # Keep node_modules from container (don't overwrite with host)
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+
+  # Optional: run the production build locally to test it
+  app-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    profiles:
+      - prod
