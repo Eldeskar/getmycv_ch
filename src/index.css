@@ -235,6 +235,12 @@ a { color: inherit; }
   width: 794px;
   min-height: 1122px;
   transform-origin: top left;
+  /* Reset inherited button styles so templates render correctly */
+  text-align: left;
+  font-weight: normal;
+  letter-spacing: normal;
+  line-height: normal;
+  color: #000;
   /* transform: scale(...) is set inline by JS */
 }
 
@@ -989,12 +995,10 @@ textarea { resize: vertical; }
 }
 .preview-zoom-sizer {
   flex-shrink: 0;
-  position: relative;
-  overflow: hidden;
 }
 .preview-zoom-sizer > .preview-paper {
   transform: scale(var(--preview-zoom, 1));
-  transform-origin: top center;
+  transform-origin: top left;
   width: 793.7px;
 }
 

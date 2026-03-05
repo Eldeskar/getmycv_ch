@@ -54,10 +54,15 @@ export function PreviewZoom({ children, style, id, className }: Props) {
     return () => ro.disconnect()
   }, [])
 
-  const effectiveZoom = zoom ?? computeFitZoom()
+  const fitZoom = computeFitZoom()
+  const effectiveZoom = zoom === null ? fitZoom : Math.max(zoom, fitZoom)
 
   const zoomIn = () => setZoom(Math.min(Math.round((effectiveZoom + ZOOM_STEP) * 100) / 100, ZOOM_MAX))
-  const zoomOut = () => setZoom(Math.max(Math.round((effectiveZoom - ZOOM_STEP) * 100) / 100, ZOOM_MIN))
+  const zoomOut = () => {
+    const next = Math.round((effectiveZoom - ZOOM_STEP) * 100) / 100
+    if (next <= fitZoom) setZoom(null)
+    else setZoom(next)
+  }
   const fitToScreen = () => setZoom(null)
 
   const onPreviewClick = useCallback((e: React.MouseEvent) => {
@@ -91,7 +96,7 @@ export function PreviewZoom({ children, style, id, className }: Props) {
       </div>
 
       <div className="preview-zoom-controls">
-        <button onClick={zoomOut} disabled={effectiveZoom <= ZOOM_MIN} title={t('preview.zoomOut')}>
+        <button onClick={zoomOut} disabled={zoom === null} title={t('preview.zoomOut')}>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 7h8v2H4z"/></svg>
         </button>
         <button onClick={fitToScreen} title={t('preview.fitToScreen')} className={zoom === null ? 'active' : ''}>
