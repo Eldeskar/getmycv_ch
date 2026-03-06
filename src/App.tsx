@@ -86,7 +86,6 @@ export default function App() {
             style={{
               '--cv-font': styleSettings.fontFamily,
               '--cv-accent': styleSettings.accentColor,
-              '--cv-font-size': `${styleSettings.fontSize}%`,
             } as React.CSSProperties}
           >
             <Preview cv={cv} template={selectedTemplate} sectionOrder={styleSettings.sectionOrder} cvLanguage={cvLanguage} />

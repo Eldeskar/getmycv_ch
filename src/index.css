@@ -277,6 +277,11 @@ a { color: inherit; }
 }
 
 /* Layout controls */
+.controls-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary, #666);
+}
 .controls-select {
   width: 100%;
   padding: 0.4rem 0.5rem;
@@ -299,6 +304,75 @@ a { color: inherit; }
   height: 16px;
   cursor: pointer;
   accent-color: var(--color-accent);
+}
+
+/* Color swatches */
+.color-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.color-swatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: border-color 0.15s;
+}
+.color-swatch:hover {
+  border-color: var(--color-border);
+}
+.color-swatch--active {
+  border-color: var(--color-text);
+  box-shadow: 0 0 0 2px var(--color-bg);
+}
+.color-swatch--custom {
+  position: relative;
+  background: var(--color-bg);
+  border: 2px dashed var(--color-border);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--color-text-secondary, #888);
+  line-height: 1;
+}
+.color-swatch--custom::after {
+  content: '+';
+  pointer-events: none;
+}
+.color-swatch--custom input[type="color"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+/* Font size range */
+.controls-range {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 13px;
+}
+.controls-range label {
+  white-space: nowrap;
+}
+.controls-range input[type="range"] {
+  flex: 1;
+  accent-color: var(--color-accent);
+}
+.controls-range__value {
+  min-width: 3ch;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Section order */
@@ -1135,9 +1209,6 @@ textarea { resize: vertical; }
   --cv-accent-lighter: color-mix(in srgb, var(--cv-accent) 15%, #f0f4f8);
   --cv-accent-subtle: color-mix(in srgb, var(--cv-accent) 40%, #7ea8d0);
   --cv-accent-tag: color-mix(in srgb, var(--cv-accent) 70%, #4a7ab5);
-}
-.cv-template {
-  font-size: var(--cv-font-size, 100%);
 }
 
 /* ─── Classic Template ───────────────────────────────────────────────────────── */

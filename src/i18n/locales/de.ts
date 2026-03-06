@@ -172,8 +172,12 @@ const de = {
     template: 'Vorlage',
     chooseTemplate: 'Vorlage wählen',
     cvLanguage: 'Lebenslauf-Sprache',
+    accentColor: 'Akzentfarbe',
+    customColor: 'Eigene Farbe',
     sectionOrder: 'Reihenfolge',
     layout: 'Layout',
+    font: 'Schrift',
+    fontSize: 'Grösse',
     spacedLayout: 'Abschnitte über Seite verteilen',
     export: 'Export',
     sections: {

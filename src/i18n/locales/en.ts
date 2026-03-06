@@ -172,8 +172,12 @@ const en = {
     template: 'Template',
     chooseTemplate: 'Choose a Template',
     cvLanguage: 'CV Language',
+    accentColor: 'Accent Color',
+    customColor: 'Custom color',
     sectionOrder: 'Section Order',
     layout: 'Layout',
+    font: 'Font',
+    fontSize: 'Size',
     spacedLayout: 'Spread sections across page',
     export: 'Export',
     sections: {

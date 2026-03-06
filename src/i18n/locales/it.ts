@@ -172,8 +172,12 @@ const it = {
     template: 'Modello',
     chooseTemplate: 'Scegli un modello',
     cvLanguage: 'Lingua del CV',
+    accentColor: 'Colore accento',
+    customColor: 'Colore personalizzato',
     sectionOrder: 'Ordine sezioni',
     layout: 'Layout',
+    font: 'Carattere',
+    fontSize: 'Dimensione',
     spacedLayout: 'Distribuire le sezioni sulla pagina',
     export: 'Esporta',
     sections: {

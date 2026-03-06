@@ -12,6 +12,11 @@ const FONT_OPTIONS = [
   { value: 'Verdana, Geneva, sans-serif', label: 'Verdana' },
 ]
 
+const ACCENT_COLORS = [
+  '#1e2a3a', '#2d4a6a', '#1a56db', '#0e7490',
+  '#047857', '#6d28d9', '#be123c', '#b45309',
+]
+
 // Two-column templates only allow reordering main-column sections
 const SIDEBAR_SECTIONS: CVSectionId[] = ['skills', 'languages', 'interests']
 const TWO_COLUMN_TEMPLATES: TemplateId[] = ['modern', 'professional', 'creative', 'sharp', 'elegant']
@@ -114,9 +119,33 @@ export function OptionsBar({ selectedTemplate, onTemplateChange, styleSettings, 
         </div>
       </div>
 
+      {/* Accent Color */}
+      <div className="controls-section">
+        <div className="controls-section__title">{t('sidebar.accentColor')}</div>
+        <div className="color-swatches">
+          {ACCENT_COLORS.map((color) => (
+            <button
+              key={color}
+              className={`color-swatch${styleSettings.accentColor === color ? ' color-swatch--active' : ''}`}
+              style={{ background: color }}
+              onClick={() => updateStyle({ accentColor: color })}
+              title={color}
+            />
+          ))}
+          <label className="color-swatch color-swatch--custom" title={t('sidebar.customColor')}>
+            <input
+              type="color"
+              value={styleSettings.accentColor}
+              onChange={(e) => updateStyle({ accentColor: e.target.value })}
+            />
+          </label>
+        </div>
+      </div>
+
       {/* Layout */}
       <div className="controls-section">
         <div className="controls-section__title">{t('sidebar.layout')}</div>
+        <label className="controls-label">{t('sidebar.font')}</label>
         <select
           className="controls-select"
           value={styleSettings.fontFamily}

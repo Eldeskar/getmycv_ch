@@ -172,8 +172,12 @@ const fr = {
     template: 'Modèle',
     chooseTemplate: 'Choisir un modèle',
     cvLanguage: 'Langue du CV',
+    accentColor: 'Couleur d\'accent',
+    customColor: 'Couleur personnalisée',
     sectionOrder: 'Ordre des sections',
     layout: 'Mise en page',
+    font: 'Police',
+    fontSize: 'Taille',
     spacedLayout: 'Répartir les sections sur la page',
     export: 'Exporter',
     sections: {
