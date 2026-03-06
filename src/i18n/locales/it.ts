@@ -192,7 +192,8 @@ const it = {
     contact: 'Domande o feedback?',
     sourceCode: 'Codice sorgente su GitHub',
     privacy: 'Tutti i dati sono memorizzati localmente sul tuo dispositivo.',
-    copyright: '© {{year}} getmycv.ch',
+    copyright: '© {{year}}',
+    copyrightName: 'getmycv.ch',
   },
 } as const
 
