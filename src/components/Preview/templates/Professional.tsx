@@ -1,22 +1,24 @@
 import React from 'react'
-import { CV, CVSectionId } from '../../../types/cv'
+import { CVSectionId } from '../../../types/cv'
+import { ResolvedCV } from '../../../utils/resolveCV'
 import { formatDate } from '../../../utils/formatDate'
 import { formatPhone } from '../../../utils/formatPhone'
 import { PlaceholderMap } from '../../../utils/placeholderCV'
+import { CVLabels } from '../../../utils/cvLabels'
 import { CvPhoto } from '../CvPhoto'
 
-interface Props { cv: CV; placeholders?: PlaceholderMap; sectionOrder: CVSectionId[] }
+interface Props { cv: ResolvedCV; placeholders?: PlaceholderMap; sectionOrder: CVSectionId[]; labels: CVLabels; locale: string }
 
-function formatBirthday(value: string): string {
+function formatBirthday(value: string, locale: string): string {
   if (!value) return ''
   try {
-    return new Date(value).toLocaleDateString('en', { day: 'numeric', month: 'long', year: 'numeric' })
+    return new Date(value).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })
   } catch {
     return value
   }
 }
 
-function fullAddress(cv: CV['personal']): string {
+function fullAddress(cv: ResolvedCV['personal']): string {
   const parts = [cv.address, [cv.zip, cv.city].filter(Boolean).join(' '), cv.country].filter(Boolean)
   return parts.join(', ')
 }
@@ -37,7 +39,7 @@ function DotRating({ filled, total = 6 }: { filled: number; total?: number }) {
   )
 }
 
-export function ProfessionalTemplate({ cv, placeholders: p, sectionOrder }: Props) {
+export function ProfessionalTemplate({ cv, placeholders: p, sectionOrder, labels, locale }: Props) {
   const { personal, experience, education, skills, languages, certifications, interests } = cv
   const addr = fullAddress(personal)
 
@@ -45,7 +47,7 @@ export function ProfessionalTemplate({ cv, placeholders: p, sectionOrder }: Prop
     summary: () =>
       personal.summary ? (
         <div className={`cv-prof__section${p?.summary ? ' cv-placeholder' : ''}`}>
-          <h2>Profile</h2>
+          <h2>{labels.profile}</h2>
           <p>{personal.summary}</p>
         </div>
       ) : null,
@@ -53,7 +55,7 @@ export function ProfessionalTemplate({ cv, placeholders: p, sectionOrder }: Prop
     experience: () =>
       experience.length > 0 ? (
         <div className={`cv-prof__section${p?.experience ? ' cv-placeholder' : ''}`}>
-          <h2>Experience</h2>
+          <h2>{labels.experience}</h2>
           {experience.map((exp) => (
             <div key={exp.id} className="cv-entry">
               <div className="cv-entry__header">
@@ -63,7 +65,7 @@ export function ProfessionalTemplate({ cv, placeholders: p, sectionOrder }: Prop
                   {exp.location && <span className="cv-entry__location"> — {exp.location}</span>}
                 </div>
                 <span className="cv-entry__dates">
-                  {formatDate(exp.startDate)} – {exp.current ? 'Present' : formatDate(exp.endDate)}
+                  {formatDate(exp.startDate, locale)} – {exp.current ? labels.present : formatDate(exp.endDate, locale)}
                 </span>
               </div>
               {exp.bullets.filter(Boolean).length > 0 && (
@@ -79,7 +81,7 @@ export function ProfessionalTemplate({ cv, placeholders: p, sectionOrder }: Prop
     education: () =>
       education.length > 0 ? (
         <div className={`cv-prof__section${p?.education ? ' cv-placeholder' : ''}`}>
-          <h2>Education</h2>
+          <h2>{labels.education}</h2>
           {education.map((edu) => (
             <div key={edu.id} className="cv-entry">
               <div className="cv-entry__header">
@@ -88,10 +90,10 @@ export function ProfessionalTemplate({ cv, placeholders: p, sectionOrder }: Prop
                   <span className="cv-entry__company"> · {edu.institution}</span>
                 </div>
                 <span className="cv-entry__dates">
-                  {formatDate(edu.startDate)} – {formatDate(edu.endDate)}
+                  {formatDate(edu.startDate, locale)} – {formatDate(edu.endDate, locale)}
                 </span>
               </div>
-              {edu.grade && <p className="cv-entry__grade">Grade: {edu.grade}</p>}
+              {edu.grade && <p className="cv-entry__grade">{labels.grade}: {edu.grade}</p>}
             </div>
           ))}
         </div>
@@ -100,7 +102,7 @@ export function ProfessionalTemplate({ cv, placeholders: p, sectionOrder }: Prop
     certifications: () =>
       certifications.length > 0 ? (
         <div className={`cv-prof__section${p?.certifications ? ' cv-placeholder' : ''}`}>
-          <h2>Certifications</h2>
+          <h2>{labels.certifications}</h2>
           {certifications.map((cert) => (
             <div key={cert.id} className="cv-entry">
               <div className="cv-entry__header">
@@ -108,7 +110,7 @@ export function ProfessionalTemplate({ cv, placeholders: p, sectionOrder }: Prop
                   <strong>{cert.title}</strong>
                   {cert.institution && <span className="cv-entry__company"> · {cert.institution}</span>}
                 </div>
-                <span className="cv-entry__dates">{formatDate(cert.date)}</span>
+                <span className="cv-entry__dates">{formatDate(cert.date, locale)}</span>
               </div>
               {cert.description && <p className="cv-entry__grade">{cert.description}</p>}
             </div>
@@ -128,15 +130,13 @@ export function ProfessionalTemplate({ cv, placeholders: p, sectionOrder }: Prop
         )}
         {personal.title && <div className={`cv-prof__title${p?.title ? ' cv-placeholder' : ''}`}>{personal.title}</div>}
 
-        {personal.photo && (
-          <CvPhoto personal={personal} className="cv-prof__photo" />
-        )}
+        <CvPhoto personal={personal} className="cv-prof__photo" />
 
         {/* Personal details */}
         <div className={`cv-prof__block${p?.contact ? ' cv-placeholder' : ''}`}>
-          <h2>Details</h2>
+          <h2>{labels.details}</h2>
           {personal.birthday && (
-            <div className="cv-prof__detail">{formatBirthday(personal.birthday)}</div>
+            <div className="cv-prof__detail">{formatBirthday(personal.birthday, locale)}</div>
           )}
           {addr && <div className="cv-prof__detail">{addr}</div>}
           {personal.phone && <div className="cv-prof__detail">{formatPhone(personal.phone)}</div>}
@@ -146,10 +146,10 @@ export function ProfessionalTemplate({ cv, placeholders: p, sectionOrder }: Prop
             </div>
           )}
           {personal.nationality && (
-            <div className="cv-prof__detail">Nationality: {personal.nationality}</div>
+            <div className="cv-prof__detail">{labels.nationality}: {personal.nationality}</div>
           )}
           {personal.driversLicense && (
-            <div className="cv-prof__detail">Licence: {personal.driversLicense}</div>
+            <div className="cv-prof__detail">{labels.licence}: {personal.driversLicense}</div>
           )}
           {personal.website && (
             <div className="cv-prof__detail">
@@ -173,7 +173,7 @@ export function ProfessionalTemplate({ cv, placeholders: p, sectionOrder }: Prop
         {/* Skills */}
         {skills.length > 0 && (
           <div className={`cv-prof__block${p?.skills ? ' cv-placeholder' : ''}`}>
-            <h2>Skills</h2>
+            <h2>{labels.skills}</h2>
             {skills.map((group) => (
               <div key={group.id} className="cv-prof__skill-group">
                 {group.category && <h4>{group.category}</h4>}
@@ -190,7 +190,7 @@ export function ProfessionalTemplate({ cv, placeholders: p, sectionOrder }: Prop
         {/* Languages */}
         {languages.length > 0 && (
           <div className={`cv-prof__block${p?.languages ? ' cv-placeholder' : ''}`}>
-            <h2>Languages</h2>
+            <h2>{labels.languages}</h2>
             {languages.map((lang) => (
               <div key={lang.id} className="cv-prof__lang-row">
                 <span>{lang.language}</span>
@@ -203,7 +203,7 @@ export function ProfessionalTemplate({ cv, placeholders: p, sectionOrder }: Prop
         {/* Interests */}
         {interests.length > 0 && (
           <div className={`cv-prof__block${p?.interests ? ' cv-placeholder' : ''}`}>
-            <h2>Interests</h2>
+            <h2>{labels.interests}</h2>
             <div className="cv-prof__interests">
               {interests.map((item) => (
                 <span key={item} className="cv-prof__interest-tag">{item}</span>

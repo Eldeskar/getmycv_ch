@@ -1,34 +1,36 @@
 import React from 'react'
-import { CV, CVSectionId } from '../../../types/cv'
+import { CVSectionId } from '../../../types/cv'
+import { ResolvedCV } from '../../../utils/resolveCV'
 import { formatDate } from '../../../utils/formatDate'
 import { formatPhone } from '../../../utils/formatPhone'
 import { PlaceholderMap } from '../../../utils/placeholderCV'
+import { CVLabels } from '../../../utils/cvLabels'
 import { CvPhoto } from '../CvPhoto'
 
-interface Props { cv: CV; placeholders?: PlaceholderMap; sectionOrder: CVSectionId[] }
+interface Props { cv: ResolvedCV; placeholders?: PlaceholderMap; sectionOrder: CVSectionId[]; labels: CVLabels; locale: string }
 
-function formatBirthday(value: string): string {
+function formatBirthday(value: string, locale: string): string {
   if (!value) return ''
   try {
-    return new Date(value).toLocaleDateString('en', { day: 'numeric', month: 'long', year: 'numeric' })
+    return new Date(value).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })
   } catch {
     return value
   }
 }
 
-function fullAddress(cv: CV['personal']): string {
+function fullAddress(cv: ResolvedCV['personal']): string {
   const parts = [cv.address, [cv.zip, cv.city].filter(Boolean).join(' '), cv.country].filter(Boolean)
   return parts.join(', ')
 }
 
-export function ExecutiveTemplate({ cv, placeholders: p, sectionOrder }: Props) {
+export function ExecutiveTemplate({ cv, placeholders: p, sectionOrder, labels, locale }: Props) {
   const { personal, experience, education, skills, languages, certifications, interests } = cv
 
   const sections: Record<string, () => React.ReactNode> = {
     summary: () =>
       personal.summary ? (
         <div className={`cv-executive__section${p?.summary ? ' cv-placeholder' : ''}`}>
-          <h2>Profile</h2>
+          <h2>{labels.profile}</h2>
           <p className="cv-executive__summary">{personal.summary}</p>
         </div>
       ) : null,
@@ -36,12 +38,12 @@ export function ExecutiveTemplate({ cv, placeholders: p, sectionOrder }: Props) 
     experience: () =>
       experience.length > 0 ? (
         <div className={`cv-executive__section${p?.experience ? ' cv-placeholder' : ''}`}>
-          <h2>Experience</h2>
+          <h2>{labels.experience}</h2>
           {experience.map((exp) => (
             <div key={exp.id} className="cv-executive__entry">
               <div className="cv-executive__entry-dates">
-                {formatDate(exp.startDate)} –<br />
-                {exp.current ? 'Present' : formatDate(exp.endDate)}
+                {formatDate(exp.startDate, locale)} –<br />
+                {exp.current ? labels.present : formatDate(exp.endDate, locale)}
               </div>
               <div className="cv-executive__entry-content">
                 <div className="cv-executive__entry-title">
@@ -63,18 +65,18 @@ export function ExecutiveTemplate({ cv, placeholders: p, sectionOrder }: Props) 
     education: () =>
       education.length > 0 ? (
         <div className={`cv-executive__section${p?.education ? ' cv-placeholder' : ''}`}>
-          <h2>Education</h2>
+          <h2>{labels.education}</h2>
           {education.map((edu) => (
             <div key={edu.id} className="cv-executive__entry">
               <div className="cv-executive__entry-dates">
-                {formatDate(edu.endDate)}
+                {formatDate(edu.endDate, locale)}
               </div>
               <div className="cv-executive__entry-content">
                 <div className="cv-executive__entry-title">
                   <strong>{edu.degree}{edu.field ? ` in ${edu.field}` : ''}</strong>
                   <span className="cv-executive__at"> · {edu.institution}</span>
                 </div>
-                {edu.grade && <p className="cv-executive__desc">Grade: {edu.grade}</p>}
+                {edu.grade && <p className="cv-executive__desc">{labels.grade}: {edu.grade}</p>}
               </div>
             </div>
           ))}
@@ -84,11 +86,11 @@ export function ExecutiveTemplate({ cv, placeholders: p, sectionOrder }: Props) 
     certifications: () =>
       certifications.length > 0 ? (
         <div className={`cv-executive__section${p?.certifications ? ' cv-placeholder' : ''}`}>
-          <h2>Certifications</h2>
+          <h2>{labels.certifications}</h2>
           {certifications.map((cert) => (
             <div key={cert.id} className="cv-executive__entry">
               <div className="cv-executive__entry-dates">
-                {formatDate(cert.date)}
+                {formatDate(cert.date, locale)}
               </div>
               <div className="cv-executive__entry-content">
                 <div className="cv-executive__entry-title">
@@ -105,7 +107,7 @@ export function ExecutiveTemplate({ cv, placeholders: p, sectionOrder }: Props) 
     skills: () =>
       (skills.length > 0 || languages.length > 0) ? (
         <div className={`cv-executive__section${p?.skills && p?.languages ? ' cv-placeholder' : ''}`}>
-          <h2>Skills & Languages</h2>
+          <h2>{labels.skillsAndLanguages}</h2>
           <div className="cv-executive__skills-grid">
             {skills.map((group) => (
               <div key={group.id} className="cv-executive__skill-row">
@@ -115,7 +117,7 @@ export function ExecutiveTemplate({ cv, placeholders: p, sectionOrder }: Props) 
             ))}
             {languages.length > 0 && (
               <div className="cv-executive__skill-row">
-                <strong>Languages: </strong>
+                <strong>{labels.languages}: </strong>
                 <span>{languages.map((l) => `${l.language} (${l.level})`).join(', ')}</span>
               </div>
             )}
@@ -128,7 +130,7 @@ export function ExecutiveTemplate({ cv, placeholders: p, sectionOrder }: Props) 
     interests: () =>
       interests.length > 0 ? (
         <div className={`cv-executive__section${p?.interests ? ' cv-placeholder' : ''}`}>
-          <h2>Interests</h2>
+          <h2>{labels.interests}</h2>
           <p className="cv-executive__desc">{interests.join(', ')}</p>
         </div>
       ) : null,
@@ -140,9 +142,7 @@ export function ExecutiveTemplate({ cv, placeholders: p, sectionOrder }: Props) 
     <div className="cv-template cv-executive">
       {/* Header: photo + name/contact */}
       <div className="cv-executive__header" data-cv-section="personal">
-        {personal.photo && (
-          <CvPhoto personal={personal} className="cv-photo cv-executive__photo" />
-        )}
+        <CvPhoto personal={personal} className="cv-photo cv-executive__photo" />
         <div className="cv-executive__header-text">
           {personal.name && <h1 className={p?.name ? 'cv-placeholder' : ''}>{personal.name}</h1>}
           {personal.title && <div className={`cv-executive__subtitle${p?.title ? ' cv-placeholder' : ''}`}>{personal.title}</div>}
@@ -167,9 +167,9 @@ export function ExecutiveTemplate({ cv, placeholders: p, sectionOrder }: Props) 
       {/* Details bar */}
       {(personal.birthday || personal.nationality || personal.driversLicense) && (
         <div className="cv-executive__details">
-          {personal.birthday && <span>Born: {formatBirthday(personal.birthday)}</span>}
-          {personal.nationality && <span>Nationality: {personal.nationality}</span>}
-          {personal.driversLicense && <span>Licence: {personal.driversLicense}</span>}
+          {personal.birthday && <span>{labels.born}: {formatBirthday(personal.birthday, locale)}</span>}
+          {personal.nationality && <span>{labels.nationality}: {personal.nationality}</span>}
+          {personal.driversLicense && <span>{labels.licence}: {personal.driversLicense}</span>}
         </div>
       )}
 

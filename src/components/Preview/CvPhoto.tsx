@@ -1,11 +1,31 @@
-import { PersonalInfo } from '../../types/cv'
+interface PhotoFields {
+  photo: string
+  photoZoom: number
+  photoOffsetX: number
+  photoOffsetY: number
+  photoGrayscale: boolean
+}
 
 interface Props {
-  personal: PersonalInfo
+  personal: PhotoFields
   className: string
 }
 
+function PlaceholderAvatar({ className }: { className: string }) {
+  return (
+    <svg viewBox="0 0 200 200" className={`${className} cv-photo-placeholder`} xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="200" fill="#e5e7eb" />
+      <circle cx="100" cy="78" r="40" fill="#c4c8cd" />
+      <ellipse cx="100" cy="176" rx="65" ry="52" fill="#c4c8cd" />
+    </svg>
+  )
+}
+
 export function CvPhoto({ personal, className }: Props) {
+  if (!personal.photo) {
+    return <PlaceholderAvatar className={className} />
+  }
+
   const hasAdjustment = personal.photoZoom !== 1 || personal.photoOffsetX !== 0 || personal.photoOffsetY !== 0 || personal.photoGrayscale
 
   const grayscaleStyle = personal.photoGrayscale ? { filter: 'grayscale(100%)' } : {}

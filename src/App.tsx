@@ -6,7 +6,7 @@ import { Preview } from './components/Preview'
 import { PreviewZoom } from './components/PreviewZoom'
 import { StorageBanner } from './components/StorageBanner'
 import { StorageIndicator } from './components/StorageIndicator'
-import { RightSidebar } from './components/RightSidebar'
+import { OptionsBar } from './components/RightSidebar'
 import { LanguageSwitcher } from './components/LanguageSwitcher'
 import { isBannerDismissed } from './utils/storage'
 
@@ -15,7 +15,7 @@ const APP_VERSION = __APP_VERSION__
 
 export default function App() {
   const { t } = useTranslation()
-  const { cv, selectedTemplate, styleSettings, lastSaved, updateCV, updateTemplate, updateStyleSettings } = useCVStore()
+  const { cv, cvLanguage, selectedTemplate, styleSettings, lastSaved, updateCV, updateTemplate, updateStyleSettings, switchCVLanguage } = useCVStore()
   const [showBanner, setShowBanner] = useState(!isBannerDismissed())
 
   // Ctrl+S → JSON backup download
@@ -57,7 +57,7 @@ export default function App() {
 
       <div className="app-body">
         <aside className="app-sidebar">
-          <Editor cv={cv} onChange={updateCV} />
+          <Editor cv={cv} cvLanguage={cvLanguage} onChange={updateCV} />
           <footer className="app-footer">
             <div className="app-footer__privacy">{t('footer.privacy')}</div>
             <div className="app-footer__links">
@@ -89,16 +89,18 @@ export default function App() {
               '--cv-font-size': `${styleSettings.fontSize}%`,
             } as React.CSSProperties}
           >
-            <Preview cv={cv} template={selectedTemplate} sectionOrder={styleSettings.sectionOrder} />
+            <Preview cv={cv} template={selectedTemplate} sectionOrder={styleSettings.sectionOrder} cvLanguage={cvLanguage} />
           </PreviewZoom>
         </main>
 
-        <RightSidebar
+        <OptionsBar
           selectedTemplate={selectedTemplate}
           onTemplateChange={updateTemplate}
           styleSettings={styleSettings}
           onStyleChange={updateStyleSettings}
           cv={cv}
+          cvLanguage={cvLanguage}
+          onCVLanguageChange={switchCVLanguage}
           previewId="cv-preview-root"
         />
       </div>

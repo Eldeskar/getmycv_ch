@@ -1,11 +1,13 @@
 import React from 'react'
-import { CV, CVSectionId } from '../../../types/cv'
+import { CVSectionId } from '../../../types/cv'
+import { ResolvedCV } from '../../../utils/resolveCV'
 import { formatDate } from '../../../utils/formatDate'
 import { formatPhone } from '../../../utils/formatPhone'
 import { PlaceholderMap } from '../../../utils/placeholderCV'
+import { CVLabels } from '../../../utils/cvLabels'
 import { CvPhoto } from '../CvPhoto'
 
-interface Props { cv: CV; placeholders?: PlaceholderMap; sectionOrder: CVSectionId[] }
+interface Props { cv: ResolvedCV; placeholders?: PlaceholderMap; sectionOrder: CVSectionId[]; labels: CVLabels; locale: string }
 
 /** Map CEFR / "Native" to a 0–1 ratio for bars. */
 function langLevelRatio(level: string): number {
@@ -43,20 +45,20 @@ const LinkedInIcon = () => (
   </svg>
 )
 
-export function ElegantTemplate({ cv, placeholders: p, sectionOrder }: Props) {
+export function ElegantTemplate({ cv, placeholders: p, sectionOrder, labels, locale }: Props) {
   const { personal, experience, education, skills, languages, certifications, interests } = cv
 
   const sidebarSections: Record<string, () => React.ReactNode> = {
     education: () =>
       education.length > 0 ? (
         <div className={`cv-elegant__side-section${p?.education ? ' cv-placeholder' : ''}`} data-cv-section="education">
-          <h3 className="cv-elegant__side-title">Education</h3>
+          <h3 className="cv-elegant__side-title">{labels.education}</h3>
           {education.map((edu) => (
             <div key={edu.id} className="cv-elegant__side-entry">
-              <div className="cv-elegant__side-dates">{formatDate(edu.startDate)} – {formatDate(edu.endDate)}</div>
+              <div className="cv-elegant__side-dates">{formatDate(edu.startDate, locale)} – {formatDate(edu.endDate, locale)}</div>
               <div className="cv-elegant__side-role">{edu.degree}{edu.field ? ` in ${edu.field}` : ''}</div>
               <div className="cv-elegant__side-where">{edu.institution}</div>
-              {edu.grade && <div className="cv-elegant__side-detail">Grade: {edu.grade}</div>}
+              {edu.grade && <div className="cv-elegant__side-detail">{labels.grade}: {edu.grade}</div>}
             </div>
           ))}
         </div>
@@ -65,7 +67,7 @@ export function ElegantTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     languages: () =>
       languages.length > 0 ? (
         <div className={`cv-elegant__side-section${p?.languages ? ' cv-placeholder' : ''}`} data-cv-section="languages">
-          <h3 className="cv-elegant__side-title">Languages</h3>
+          <h3 className="cv-elegant__side-title">{labels.languages}</h3>
           {languages.map((lang) => (
             <div key={lang.id} className="cv-elegant__lang-row">
               <div className="cv-elegant__lang-info">
@@ -84,7 +86,7 @@ export function ElegantTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     interests: () =>
       interests.length > 0 ? (
         <div className={`cv-elegant__side-section${p?.interests ? ' cv-placeholder' : ''}`} data-cv-section="interests">
-          <h3 className="cv-elegant__side-title">Interests</h3>
+          <h3 className="cv-elegant__side-title">{labels.interests}</h3>
           <ul className="cv-elegant__side-list">
             {interests.map((item) => <li key={item}>{item}</li>)}
           </ul>
@@ -96,7 +98,7 @@ export function ElegantTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     summary: () =>
       personal.summary ? (
         <div className={`cv-elegant__main-section${p?.summary ? ' cv-placeholder' : ''}`} data-cv-section="summary">
-          <h2 className="cv-elegant__main-title">Profile</h2>
+          <h2 className="cv-elegant__main-title">{labels.profile}</h2>
           <p className="cv-elegant__text">{personal.summary}</p>
         </div>
       ) : null,
@@ -104,13 +106,13 @@ export function ElegantTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     experience: () =>
       experience.length > 0 ? (
         <div className={`cv-elegant__main-section${p?.experience ? ' cv-placeholder' : ''}`} data-cv-section="experience">
-          <h2 className="cv-elegant__main-title">Work Experience</h2>
+          <h2 className="cv-elegant__main-title">{labels.experience}</h2>
           {experience.map((exp) => (
             <div key={exp.id} className="cv-elegant__entry">
               <div className="cv-elegant__entry-header">
                 <strong className="cv-elegant__entry-role">{exp.role}</strong>
                 <span className="cv-elegant__entry-dates">
-                  {formatDate(exp.startDate)} – {exp.current ? 'Present' : formatDate(exp.endDate)}
+                  {formatDate(exp.startDate, locale)} – {exp.current ? labels.present : formatDate(exp.endDate, locale)}
                 </span>
               </div>
               <div className="cv-elegant__entry-where">
@@ -131,7 +133,7 @@ export function ElegantTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     skills: () =>
       skills.length > 0 ? (
         <div className={`cv-elegant__main-section${p?.skills ? ' cv-placeholder' : ''}`} data-cv-section="skills">
-          <h2 className="cv-elegant__main-title">Skills &amp; Expertise</h2>
+          <h2 className="cv-elegant__main-title">{labels.skillsAndExpertise}</h2>
           <div className="cv-elegant__skills-grid">
             {skills.flatMap((group) =>
               group.items.filter(Boolean).map((skill) => (
@@ -153,12 +155,12 @@ export function ElegantTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     certifications: () =>
       certifications.length > 0 ? (
         <div className={`cv-elegant__main-section${p?.certifications ? ' cv-placeholder' : ''}`} data-cv-section="certifications">
-          <h2 className="cv-elegant__main-title">Certifications</h2>
+          <h2 className="cv-elegant__main-title">{labels.certifications}</h2>
           {certifications.map((cert) => (
             <div key={cert.id} className="cv-elegant__entry">
               <div className="cv-elegant__entry-header">
                 <strong className="cv-elegant__entry-role">{cert.title}</strong>
-                <span className="cv-elegant__entry-dates">{formatDate(cert.date)}</span>
+                <span className="cv-elegant__entry-dates">{formatDate(cert.date, locale)}</span>
               </div>
               {cert.institution && <div className="cv-elegant__entry-where">{cert.institution}</div>}
               {cert.description && <p className="cv-elegant__text" style={{ marginTop: '0.15rem' }}>{cert.description}</p>}
@@ -176,9 +178,7 @@ export function ElegantTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     <div className="cv-template cv-elegant">
       {/* ── Header Banner ── */}
       <div className="cv-elegant__header" data-cv-section="personal">
-        {personal.photo && (
-          <CvPhoto personal={personal} className="cv-photo cv-elegant__photo" />
-        )}
+        <CvPhoto personal={personal} className="cv-photo cv-elegant__photo" />
         <div className="cv-elegant__header-text">
           {personal.name && <h1 className={p?.name ? 'cv-placeholder' : ''}>{personal.name}</h1>}
           {personal.title && <div className={`cv-elegant__subtitle${p?.title ? ' cv-placeholder' : ''}`}>{personal.title}</div>}
@@ -191,7 +191,7 @@ export function ElegantTemplate({ cv, placeholders: p, sectionOrder }: Props) {
         <div className="cv-elegant__sidebar">
           {/* Contact */}
           <div className={`cv-elegant__side-section${p?.contact ? ' cv-placeholder' : ''}`} data-cv-section="personal">
-            <h3 className="cv-elegant__side-title">Contact</h3>
+            <h3 className="cv-elegant__side-title">{labels.contact}</h3>
             <div className="cv-elegant__contact-list">
               {personal.phone && (
                 <div className="cv-elegant__contact-row">

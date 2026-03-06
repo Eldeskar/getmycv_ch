@@ -1,4 +1,6 @@
-import { CV } from '../types/cv'
+import { CV, CVLanguage } from '../types/cv'
+import { resolveCV, ResolvedCV } from './resolveCV'
+import { migrateCV } from './storage'
 import {
   Document,
   Packer,
@@ -22,8 +24,8 @@ export function importJSON(file: File): Promise<CV> {
     const reader = new FileReader()
     reader.onload = (e) => {
       try {
-        const cv = JSON.parse(e.target?.result as string) as CV
-        resolve(cv)
+        const raw = JSON.parse(e.target?.result as string)
+        resolve(migrateCV(raw))
       } catch {
         reject(new Error('Invalid JSON file'))
       }
@@ -71,14 +73,15 @@ export async function exportPDF(elementId: string, name: string): Promise<void> 
 
 // ─── DOCX ────────────────────────────────────────────────────────────────────
 
-export async function exportDOCX(cv: CV): Promise<void> {
+export async function exportDOCX(cv: CV, lang: CVLanguage = 'en'): Promise<void> {
+  const r: ResolvedCV = resolveCV(cv, lang)
   const sections: Paragraph[] = []
 
   // Name
-  if (cv.personal.name) {
+  if (r.personal.name) {
     sections.push(
       new Paragraph({
-        text: cv.personal.name,
+        text: r.personal.name,
         heading: HeadingLevel.TITLE,
         alignment: AlignmentType.CENTER,
       })
@@ -86,17 +89,17 @@ export async function exportDOCX(cv: CV): Promise<void> {
   }
 
   // Title
-  if (cv.personal.title) {
+  if (r.personal.title) {
     sections.push(
       new Paragraph({
-        children: [new TextRun({ text: cv.personal.title, italics: true, size: 22 })],
+        children: [new TextRun({ text: r.personal.title, italics: true, size: 22 })],
         alignment: AlignmentType.CENTER,
       })
     )
   }
 
   // Contact line
-  const contactParts = [cv.personal.email, cv.personal.phone, [cv.personal.city, cv.personal.country].filter(Boolean).join(', ')].filter(Boolean)
+  const contactParts = [r.personal.email, r.personal.phone, [r.personal.city, r.personal.country].filter(Boolean).join(', ')].filter(Boolean)
   if (contactParts.length) {
     sections.push(
       new Paragraph({
@@ -107,7 +110,7 @@ export async function exportDOCX(cv: CV): Promise<void> {
   }
 
   // Online links
-  const linkParts = [cv.personal.website, cv.personal.linkedin, cv.personal.github].filter(Boolean)
+  const linkParts = [r.personal.website, r.personal.linkedin, r.personal.github].filter(Boolean)
   if (linkParts.length) {
     sections.push(
       new Paragraph({
@@ -118,17 +121,17 @@ export async function exportDOCX(cv: CV): Promise<void> {
   }
 
   // Summary
-  if (cv.personal.summary) {
+  if (r.personal.summary) {
     sections.push(new Paragraph({ text: '' }))
     sections.push(new Paragraph({ text: 'Summary', heading: HeadingLevel.HEADING_1 }))
-    sections.push(new Paragraph({ text: cv.personal.summary }))
+    sections.push(new Paragraph({ text: r.personal.summary }))
   }
 
   // Experience
-  if (cv.experience.length) {
+  if (r.experience.length) {
     sections.push(new Paragraph({ text: '' }))
     sections.push(new Paragraph({ text: 'Experience', heading: HeadingLevel.HEADING_1 }))
-    for (const exp of cv.experience) {
+    for (const exp of r.experience) {
       sections.push(
         new Paragraph({
           children: [
@@ -148,10 +151,10 @@ export async function exportDOCX(cv: CV): Promise<void> {
   }
 
   // Education
-  if (cv.education.length) {
+  if (r.education.length) {
     sections.push(new Paragraph({ text: '' }))
     sections.push(new Paragraph({ text: 'Education', heading: HeadingLevel.HEADING_1 }))
-    for (const edu of cv.education) {
+    for (const edu of r.education) {
       sections.push(
         new Paragraph({
           children: [
@@ -165,10 +168,10 @@ export async function exportDOCX(cv: CV): Promise<void> {
   }
 
   // Skills
-  if (cv.skills.length) {
+  if (r.skills.length) {
     sections.push(new Paragraph({ text: '' }))
     sections.push(new Paragraph({ text: 'Skills', heading: HeadingLevel.HEADING_1 }))
-    for (const group of cv.skills) {
+    for (const group of r.skills) {
       sections.push(
         new Paragraph({
           children: [
@@ -181,21 +184,21 @@ export async function exportDOCX(cv: CV): Promise<void> {
   }
 
   // Languages
-  if (cv.languages.length) {
+  if (r.languages.length) {
     sections.push(new Paragraph({ text: '' }))
     sections.push(new Paragraph({ text: 'Languages', heading: HeadingLevel.HEADING_1 }))
     sections.push(
       new Paragraph({
-        text: cv.languages.map((l) => `${l.language} (${l.level})`).join(', '),
+        text: r.languages.map((l) => `${l.language} (${l.level})`).join(', '),
       })
     )
   }
 
   // Projects
-  if (cv.projects.length) {
+  if (r.projects.length) {
     sections.push(new Paragraph({ text: '' }))
     sections.push(new Paragraph({ text: 'Projects', heading: HeadingLevel.HEADING_1 }))
-    for (const proj of cv.projects) {
+    for (const proj of r.projects) {
       const parts: TextRun[] = [new TextRun({ text: proj.name, bold: true })]
       if (proj.description) parts.push(new TextRun({ text: ` — ${proj.description}` }))
       sections.push(new Paragraph({ children: parts }))
@@ -206,10 +209,10 @@ export async function exportDOCX(cv: CV): Promise<void> {
   }
 
   // Certifications
-  if (cv.certifications.length) {
+  if (r.certifications.length) {
     sections.push(new Paragraph({ text: '' }))
     sections.push(new Paragraph({ text: 'Certifications', heading: HeadingLevel.HEADING_1 }))
-    for (const cert of cv.certifications) {
+    for (const cert of r.certifications) {
       sections.push(
         new Paragraph({
           children: [
@@ -226,10 +229,10 @@ export async function exportDOCX(cv: CV): Promise<void> {
   }
 
   // Interests
-  if (cv.interests.length) {
+  if (r.interests.length) {
     sections.push(new Paragraph({ text: '' }))
     sections.push(new Paragraph({ text: 'Interests', heading: HeadingLevel.HEADING_1 }))
-    sections.push(new Paragraph({ text: cv.interests.join(', ') }))
+    sections.push(new Paragraph({ text: r.interests.join(', ') }))
   }
 
   const doc = new Document({
@@ -237,7 +240,7 @@ export async function exportDOCX(cv: CV): Promise<void> {
   })
 
   const buffer = await Packer.toBlob(doc)
-  downloadBlob(buffer, `${cvFilename(cv.personal.name)}.docx`)
+  downloadBlob(buffer, `${cvFilename(r.personal.name)}.docx`)
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

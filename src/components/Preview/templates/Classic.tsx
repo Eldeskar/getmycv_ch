@@ -1,44 +1,46 @@
 import React from 'react'
-import { CV, CVSectionId } from '../../../types/cv'
+import { CVSectionId } from '../../../types/cv'
+import { ResolvedCV } from '../../../utils/resolveCV'
 import { formatDate } from '../../../utils/formatDate'
 import { formatPhone } from '../../../utils/formatPhone'
 import { PlaceholderMap } from '../../../utils/placeholderCV'
+import { CVLabels } from '../../../utils/cvLabels'
 import { CvPhoto } from '../CvPhoto'
 
-interface Props { cv: CV; placeholders?: PlaceholderMap; sectionOrder: CVSectionId[] }
+interface Props { cv: ResolvedCV; placeholders?: PlaceholderMap; sectionOrder: CVSectionId[]; labels: CVLabels; locale: string }
 
 function cityCountry(city: string, country: string): string {
   return [city, country].filter(Boolean).join(', ')
 }
 
-function formatBirthday(value: string): string {
+function formatBirthday(value: string, locale: string): string {
   if (!value) return ''
   try {
-    return new Date(value).toLocaleDateString('en', { day: 'numeric', month: 'long', year: 'numeric' })
+    return new Date(value).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })
   } catch {
     return value
   }
 }
 
-export function ClassicTemplate({ cv, placeholders: p, sectionOrder }: Props) {
+export function ClassicTemplate({ cv, placeholders: p, sectionOrder, labels, locale }: Props) {
   const { personal, experience, education, skills, languages, certifications, interests } = cv
   const location = cityCountry(personal.city, personal.country)
   const details = [
-    personal.birthday && `Born ${formatBirthday(personal.birthday)}`,
-    personal.nationality && `Nationality: ${personal.nationality}`,
-    personal.driversLicense && `Driver's licence: ${personal.driversLicense}`,
+    personal.birthday && `${labels.born} ${formatBirthday(personal.birthday, locale)}`,
+    personal.nationality && `${labels.nationality}: ${personal.nationality}`,
+    personal.driversLicense && `${labels.licence}: ${personal.driversLicense}`,
   ].filter(Boolean)
 
   const sections: Record<string, () => React.ReactNode> = {
     summary: () => personal.summary ? (
       <div className={`cv-classic__section${p?.summary ? ' cv-placeholder' : ''}`}>
-        <h2>Summary</h2>
+        <h2>{labels.profile}</h2>
         <p>{personal.summary}</p>
       </div>
     ) : <></>,
     experience: () => experience.length > 0 ? (
       <div className={`cv-classic__section${p?.experience ? ' cv-placeholder' : ''}`}>
-        <h2>Experience</h2>
+        <h2>{labels.experience}</h2>
         {experience.map((exp) => (
           <div key={exp.id} className="cv-entry">
             <div className="cv-entry__header">
@@ -47,7 +49,7 @@ export function ClassicTemplate({ cv, placeholders: p, sectionOrder }: Props) {
                 {exp.location && <span className="cv-entry__location"> — {exp.location}</span>}
               </div>
               <span className="cv-entry__dates">
-                {formatDate(exp.startDate)} – {exp.current ? 'Present' : formatDate(exp.endDate)}
+                {formatDate(exp.startDate, locale)} – {exp.current ? labels.present : formatDate(exp.endDate, locale)}
               </span>
             </div>
             {exp.bullets.filter(Boolean).length > 0 && (
@@ -61,23 +63,23 @@ export function ClassicTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     ) : <></>,
     education: () => education.length > 0 ? (
       <div className={`cv-classic__section${p?.education ? ' cv-placeholder' : ''}`}>
-        <h2>Education</h2>
+        <h2>{labels.education}</h2>
         {education.map((edu) => (
           <div key={edu.id} className="cv-entry">
             <div className="cv-entry__header">
               <div>
                 <strong>{edu.degree}{edu.field ? ` in ${edu.field}` : ''}</strong>, {edu.institution}
               </div>
-              <span className="cv-entry__dates">{formatDate(edu.endDate)}</span>
+              <span className="cv-entry__dates">{formatDate(edu.endDate, locale)}</span>
             </div>
-            {edu.grade && <p className="cv-entry__grade">Grade: {edu.grade}</p>}
+            {edu.grade && <p className="cv-entry__grade">{labels.grade}: {edu.grade}</p>}
           </div>
         ))}
       </div>
     ) : <></>,
     skills: () => (skills.length > 0 || languages.length > 0) ? (
       <div className={`cv-classic__section${p?.skills && p?.languages ? ' cv-placeholder' : ''}`}>
-        <h2>Skills & Languages</h2>
+        <h2>{labels.skillsAndLanguages}</h2>
         {skills.map((group) => (
           <div key={group.id} className="cv-classic__skill-row">
             {group.category && <strong>{group.category}: </strong>}
@@ -86,7 +88,7 @@ export function ClassicTemplate({ cv, placeholders: p, sectionOrder }: Props) {
         ))}
         {languages.length > 0 && (
           <div className="cv-classic__skill-row">
-            <strong>Languages: </strong>
+            <strong>{labels.languages}: </strong>
             <span>{languages.map((l) => `${l.language} (${l.level})`).join(', ')}</span>
           </div>
         )}
@@ -95,7 +97,7 @@ export function ClassicTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     languages: () => null,
     certifications: () => certifications.length > 0 ? (
       <div className={`cv-classic__section${p?.certifications ? ' cv-placeholder' : ''}`}>
-        <h2>Certifications</h2>
+        <h2>{labels.certifications}</h2>
         {certifications.map((cert) => (
           <div key={cert.id} className="cv-entry">
             <div className="cv-entry__header">
@@ -103,7 +105,7 @@ export function ClassicTemplate({ cv, placeholders: p, sectionOrder }: Props) {
                 <strong>{cert.title}</strong>
                 {cert.institution && <span>, {cert.institution}</span>}
               </div>
-              <span className="cv-entry__dates">{formatDate(cert.date)}</span>
+              <span className="cv-entry__dates">{formatDate(cert.date, locale)}</span>
             </div>
             {cert.description && <p className="cv-entry__grade">{cert.description}</p>}
           </div>
@@ -112,7 +114,7 @@ export function ClassicTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     ) : <></>,
     interests: () => interests.length > 0 ? (
       <div className={`cv-classic__section${p?.interests ? ' cv-placeholder' : ''}`}>
-        <h2>Interests</h2>
+        <h2>{labels.interests}</h2>
         <div className="cv-classic__skill-row">{interests.join(', ')}</div>
       </div>
     ) : <></>,
@@ -144,9 +146,7 @@ export function ClassicTemplate({ cv, placeholders: p, sectionOrder }: Props) {
               </div>
             )}
           </div>
-          {personal.photo && (
-            <CvPhoto personal={personal} className="cv-photo cv-classic__photo" />
-          )}
+          <CvPhoto personal={personal} className="cv-photo cv-classic__photo" />
         </div>
       </div>
 

@@ -171,13 +171,10 @@ const de = {
   sidebar: {
     template: 'Vorlage',
     chooseTemplate: 'Vorlage wählen',
-    font: 'Schriftart',
-    accentColor: 'Akzentfarbe',
-    customColor: 'Eigene Farbe',
-    fontSize: 'Schriftgrösse',
+    cvLanguage: 'Lebenslauf-Sprache',
     sectionOrder: 'Reihenfolge',
+    layout: 'Layout',
     spacedLayout: 'Abschnitte über Seite verteilen',
-    reset: 'Zurücksetzen',
     export: 'Export',
     sections: {
       summary: 'Zusammenfassung',

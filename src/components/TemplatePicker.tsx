@@ -41,7 +41,7 @@ function Thumbnail({ id, accentColor, cv }: { id: TemplateId; accentColor: strin
           transform: `scale(${scale})`,
         } as React.CSSProperties}
       >
-        <Preview cv={cv} template={id} sectionOrder={DEFAULT_STYLE.sectionOrder} />
+        <Preview cv={cv} template={id} sectionOrder={DEFAULT_STYLE.sectionOrder} cvLanguage="en" />
       </div>
     </div>
   )

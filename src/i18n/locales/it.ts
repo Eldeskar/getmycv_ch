@@ -171,13 +171,10 @@ const it = {
   sidebar: {
     template: 'Modello',
     chooseTemplate: 'Scegli un modello',
-    font: 'Carattere',
-    accentColor: 'Colore accento',
-    customColor: 'Colore personalizzato',
-    fontSize: 'Dimensione carattere',
+    cvLanguage: 'Lingua del CV',
     sectionOrder: 'Ordine sezioni',
+    layout: 'Layout',
     spacedLayout: 'Distribuire le sezioni sulla pagina',
-    reset: 'Ripristina',
     export: 'Esporta',
     sections: {
       summary: 'Riepilogo',

@@ -1,45 +1,47 @@
 import React from 'react'
-import { CV, CVSectionId } from '../../../types/cv'
+import { CVSectionId } from '../../../types/cv'
+import { ResolvedCV } from '../../../utils/resolveCV'
 import { formatDate } from '../../../utils/formatDate'
 import { formatPhone } from '../../../utils/formatPhone'
 import { PlaceholderMap } from '../../../utils/placeholderCV'
+import { CVLabels } from '../../../utils/cvLabels'
 import { CvPhoto } from '../CvPhoto'
 
-interface Props { cv: CV; placeholders?: PlaceholderMap; sectionOrder: CVSectionId[] }
+interface Props { cv: ResolvedCV; placeholders?: PlaceholderMap; sectionOrder: CVSectionId[]; labels: CVLabels; locale: string }
 
 function cityCountry(city: string, country: string): string {
   return [city, country].filter(Boolean).join(', ')
 }
 
-function formatBirthday(value: string): string {
+function formatBirthday(value: string, locale: string): string {
   if (!value) return ''
   try {
-    return new Date(value).toLocaleDateString('en', { day: 'numeric', month: 'long', year: 'numeric' })
+    return new Date(value).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })
   } catch {
     return value
   }
 }
 
-export function OriginalTemplate({ cv, placeholders: p, sectionOrder }: Props) {
+export function OriginalTemplate({ cv, placeholders: p, sectionOrder, labels, locale }: Props) {
   const { personal, experience, education, skills, languages, certifications, interests } = cv
   const location = cityCountry(personal.city, personal.country)
 
   const sections: Record<string, () => React.ReactNode> = {
     summary: () => personal.summary ? (
       <div className={`cv-original__section${p?.summary ? ' cv-placeholder' : ''}`}>
-        <div className="cv-original__section-title">Profile</div>
+        <div className="cv-original__section-title">{labels.profile}</div>
         <p className="cv-original__summary">{personal.summary}</p>
       </div>
     ) : <></>,
     experience: () => experience.length > 0 ? (
       <div className={`cv-original__section${p?.experience ? ' cv-placeholder' : ''}`}>
-        <div className="cv-original__section-title">Experience</div>
+        <div className="cv-original__section-title">{labels.experience}</div>
         {experience.map((exp) => (
           <div key={exp.id} className="cv-original__entry">
             <div className="cv-original__entry-header">
               <div className="cv-original__entry-title">{exp.role}</div>
               <div className="cv-original__entry-dates">
-                {formatDate(exp.startDate)} – {exp.current ? 'Present' : formatDate(exp.endDate)}
+                {formatDate(exp.startDate, locale)} – {exp.current ? labels.present : formatDate(exp.endDate, locale)}
               </div>
             </div>
             <div className="cv-original__entry-where">
@@ -56,7 +58,7 @@ export function OriginalTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     ) : <></>,
     education: () => education.length > 0 ? (
       <div className={`cv-original__section${p?.education ? ' cv-placeholder' : ''}`}>
-        <div className="cv-original__section-title">Education</div>
+        <div className="cv-original__section-title">{labels.education}</div>
         {education.map((edu) => (
           <div key={edu.id} className="cv-original__entry">
             <div className="cv-original__entry-header">
@@ -64,18 +66,18 @@ export function OriginalTemplate({ cv, placeholders: p, sectionOrder }: Props) {
                 {edu.degree}{edu.field ? ` in ${edu.field}` : ''}
               </div>
               <div className="cv-original__entry-dates">
-                {formatDate(edu.startDate)} – {formatDate(edu.endDate)}
+                {formatDate(edu.startDate, locale)} – {formatDate(edu.endDate, locale)}
               </div>
             </div>
             <div className="cv-original__entry-where">{edu.institution}</div>
-            {edu.grade && <div className="cv-original__grade">Grade: {edu.grade}</div>}
+            {edu.grade && <div className="cv-original__grade">{labels.grade}: {edu.grade}</div>}
           </div>
         ))}
       </div>
     ) : <></>,
     skills: () => skills.length > 0 ? (
       <div className={`cv-original__section${p?.skills ? ' cv-placeholder' : ''}`}>
-        <div className="cv-original__section-title">Skills</div>
+        <div className="cv-original__section-title">{labels.skills}</div>
         {skills.map((group) => (
           <div key={group.id} className="cv-original__skill-row">
             {group.category && <strong>{group.category}: </strong>}
@@ -86,7 +88,7 @@ export function OriginalTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     ) : <></>,
     languages: () => languages.length > 0 ? (
       <div className={`cv-original__section${p?.languages ? ' cv-placeholder' : ''}`}>
-        <div className="cv-original__section-title">Languages</div>
+        <div className="cv-original__section-title">{labels.languages}</div>
         <div className="cv-original__skill-row">
           {languages.map((l) => `${l.language} (${l.level})`).join(', ')}
         </div>
@@ -94,12 +96,12 @@ export function OriginalTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     ) : <></>,
     certifications: () => certifications.length > 0 ? (
       <div className={`cv-original__section${p?.certifications ? ' cv-placeholder' : ''}`}>
-        <div className="cv-original__section-title">Certifications</div>
+        <div className="cv-original__section-title">{labels.certifications}</div>
         {certifications.map((cert) => (
           <div key={cert.id} className="cv-original__entry">
             <div className="cv-original__entry-header">
               <div className="cv-original__entry-title">{cert.title}</div>
-              <div className="cv-original__entry-dates">{formatDate(cert.date)}</div>
+              <div className="cv-original__entry-dates">{formatDate(cert.date, locale)}</div>
             </div>
             {cert.institution && <div className="cv-original__entry-where">{cert.institution}</div>}
             {cert.description && <p className="cv-original__desc">{cert.description}</p>}
@@ -110,7 +112,7 @@ export function OriginalTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     projects: () => null,
     interests: () => interests.length > 0 ? (
       <div className={`cv-original__section${p?.interests ? ' cv-placeholder' : ''}`}>
-        <div className="cv-original__section-title">Interests</div>
+        <div className="cv-original__section-title">{labels.interests}</div>
         <div className="cv-original__skill-row">{interests.join(', ')}</div>
       </div>
     ) : <></>,
@@ -120,9 +122,7 @@ export function OriginalTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     <div className="cv-template cv-original">
       {/* Header */}
       <div className="cv-original__header" data-cv-section="personal">
-        {personal.photo && (
-          <CvPhoto personal={personal} className="cv-photo cv-original__photo" />
-        )}
+        <CvPhoto personal={personal} className="cv-photo cv-original__photo" />
         <div className="cv-original__header-text">
           {personal.name && <h1 className={p?.name ? 'cv-placeholder' : ''}>{personal.name}</h1>}
           {personal.title && <div className={`cv-original__subtitle${p?.title ? ' cv-placeholder' : ''}`}>{personal.title}</div>}
@@ -140,9 +140,9 @@ export function OriginalTemplate({ cv, placeholders: p, sectionOrder }: Props) {
           {(personal.birthday || personal.nationality || personal.driversLicense) && (
             <div className="cv-original__details">
               {[
-                personal.birthday && `Born ${formatBirthday(personal.birthday)}`,
-                personal.nationality && `Nationality: ${personal.nationality}`,
-                personal.driversLicense && `Driver's licence: ${personal.driversLicense}`,
+                personal.birthday && `${labels.born} ${formatBirthday(personal.birthday, locale)}`,
+                personal.nationality && `${labels.nationality}: ${personal.nationality}`,
+                personal.driversLicense && `${labels.licence}: ${personal.driversLicense}`,
               ].filter(Boolean).join(' · ')}
             </div>
           )}

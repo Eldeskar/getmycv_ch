@@ -1,16 +1,18 @@
 import React from 'react'
-import { CV, CVSectionId } from '../../../types/cv'
+import { CVSectionId } from '../../../types/cv'
+import { ResolvedCV } from '../../../utils/resolveCV'
 import { formatDate } from '../../../utils/formatDate'
 import { formatPhone } from '../../../utils/formatPhone'
 import { PlaceholderMap } from '../../../utils/placeholderCV'
+import { CVLabels } from '../../../utils/cvLabels'
 import { CvPhoto } from '../CvPhoto'
 
-interface Props { cv: CV; placeholders?: PlaceholderMap; sectionOrder: CVSectionId[] }
+interface Props { cv: ResolvedCV; placeholders?: PlaceholderMap; sectionOrder: CVSectionId[]; labels: CVLabels; locale: string }
 
-function formatBirthday(value: string): string {
+function formatBirthday(value: string, locale: string): string {
   if (!value) return ''
   try {
-    return new Date(value).toLocaleDateString('en', { day: 'numeric', month: 'long', year: 'numeric' })
+    return new Date(value).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })
   } catch {
     return value
   }
@@ -38,13 +40,13 @@ const GlobeIcon = () => (
   </svg>
 )
 
-export function SharpTemplate({ cv, placeholders: p, sectionOrder }: Props) {
+export function SharpTemplate({ cv, placeholders: p, sectionOrder, labels, locale }: Props) {
   const { personal, experience, education, skills, languages, certifications, interests } = cv
   const mainSections: Record<string, () => React.ReactNode> = {
     summary: () =>
       personal.summary ? (
         <div className={`cv-sharp__section${p?.summary ? ' cv-placeholder' : ''}`}>
-          <h2 className="cv-sharp__section-title">Profile</h2>
+          <h2 className="cv-sharp__section-title">{labels.profile}</h2>
           <p className="cv-sharp__text">{personal.summary}</p>
         </div>
       ) : null,
@@ -52,13 +54,13 @@ export function SharpTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     experience: () =>
       experience.length > 0 ? (
         <div className={`cv-sharp__section${p?.experience ? ' cv-placeholder' : ''}`}>
-          <h2 className="cv-sharp__section-title">Work Experience</h2>
+          <h2 className="cv-sharp__section-title">{labels.experience}</h2>
           {experience.map((exp) => (
             <div key={exp.id} className="cv-sharp__entry">
               <div className="cv-sharp__entry-header">
                 <strong className="cv-sharp__entry-role">{exp.role}</strong>
                 <span className="cv-sharp__entry-dates">
-                  {formatDate(exp.startDate)} – {exp.current ? 'Present' : formatDate(exp.endDate)}
+                  {formatDate(exp.startDate, locale)} – {exp.current ? labels.present : formatDate(exp.endDate, locale)}
                 </span>
               </div>
               <div className="cv-sharp__entry-where">
@@ -77,17 +79,17 @@ export function SharpTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     education: () =>
       education.length > 0 ? (
         <div className={`cv-sharp__section${p?.education ? ' cv-placeholder' : ''}`}>
-          <h2 className="cv-sharp__section-title">Education</h2>
+          <h2 className="cv-sharp__section-title">{labels.education}</h2>
           {education.map((edu) => (
             <div key={edu.id} className="cv-sharp__entry">
               <div className="cv-sharp__entry-role">
                 {edu.degree}{edu.field ? ` in ${edu.field}` : ''}
               </div>
               <div className="cv-sharp__entry-dates-block">
-                {formatDate(edu.startDate)} – {formatDate(edu.endDate)}
+                {formatDate(edu.startDate, locale)} – {formatDate(edu.endDate, locale)}
               </div>
               <div className="cv-sharp__entry-where">{edu.institution}</div>
-              {edu.grade && <div className="cv-sharp__entry-grade">Grade: {edu.grade}</div>}
+              {edu.grade && <div className="cv-sharp__entry-grade">{labels.grade}: {edu.grade}</div>}
             </div>
           ))}
         </div>
@@ -96,12 +98,12 @@ export function SharpTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     certifications: () =>
       certifications.length > 0 ? (
         <div className={`cv-sharp__section${p?.certifications ? ' cv-placeholder' : ''}`}>
-          <h2 className="cv-sharp__section-title">Certifications</h2>
+          <h2 className="cv-sharp__section-title">{labels.certifications}</h2>
           {certifications.map((cert) => (
             <div key={cert.id} className="cv-sharp__entry">
               <div className="cv-sharp__entry-header">
                 <strong className="cv-sharp__entry-role">{cert.title}</strong>
-                <span className="cv-sharp__entry-dates">{formatDate(cert.date)}</span>
+                <span className="cv-sharp__entry-dates">{formatDate(cert.date, locale)}</span>
               </div>
               {cert.institution && <div className="cv-sharp__entry-where">{cert.institution}</div>}
               {cert.description && <p className="cv-sharp__text" style={{ marginTop: '0.2rem' }}>{cert.description}</p>}
@@ -117,9 +119,7 @@ export function SharpTemplate({ cv, placeholders: p, sectionOrder }: Props) {
     <div className="cv-template cv-sharp">
       {/* ── Sidebar ── */}
       <div className="cv-sharp__sidebar" data-cv-section="personal">
-        {personal.photo && (
-          <CvPhoto personal={personal} className="cv-photo cv-sharp__photo" />
-        )}
+        <CvPhoto personal={personal} className="cv-photo cv-sharp__photo" />
 
         <div className="cv-sharp__name-block">
           {personal.name && <h1 className={p?.name ? 'cv-placeholder' : ''}>{personal.name}</h1>}
@@ -128,7 +128,7 @@ export function SharpTemplate({ cv, placeholders: p, sectionOrder }: Props) {
 
         {/* Contact */}
         <div className={`cv-sharp__sidebar-section${p?.contact ? ' cv-placeholder' : ''}`}>
-          <h3 className="cv-sharp__sidebar-title">Contact Details</h3>
+          <h3 className="cv-sharp__sidebar-title">{labels.contactDetails}</h3>
           <div className="cv-sharp__contact-list">
             {personal.phone && (
               <div className="cv-sharp__contact-row">
@@ -166,7 +166,7 @@ export function SharpTemplate({ cv, placeholders: p, sectionOrder }: Props) {
         {/* Skills */}
         {skills.length > 0 && (
           <div className={`cv-sharp__sidebar-section${p?.skills ? ' cv-placeholder' : ''}`}>
-            <h3 className="cv-sharp__sidebar-title">Skills</h3>
+            <h3 className="cv-sharp__sidebar-title">{labels.skills}</h3>
             <ul className="cv-sharp__sidebar-list">
               {skills.flatMap((group) => group.items).map((item) => (
                 <li key={item}>{item}</li>
@@ -178,7 +178,7 @@ export function SharpTemplate({ cv, placeholders: p, sectionOrder }: Props) {
         {/* Languages */}
         {languages.length > 0 && (
           <div className={`cv-sharp__sidebar-section${p?.languages ? ' cv-placeholder' : ''}`}>
-            <h3 className="cv-sharp__sidebar-title">Languages</h3>
+            <h3 className="cv-sharp__sidebar-title">{labels.languages}</h3>
             <ul className="cv-sharp__sidebar-list">
               {languages.map((lang) => (
                 <li key={lang.id}>{lang.language}: {lang.level}</li>
@@ -190,7 +190,7 @@ export function SharpTemplate({ cv, placeholders: p, sectionOrder }: Props) {
         {/* Interests */}
         {interests.length > 0 && (
           <div className={`cv-sharp__sidebar-section${p?.interests ? ' cv-placeholder' : ''}`}>
-            <h3 className="cv-sharp__sidebar-title">Interests</h3>
+            <h3 className="cv-sharp__sidebar-title">{labels.interests}</h3>
             <ul className="cv-sharp__sidebar-list">
               {interests.map((item) => (
                 <li key={item}>{item}</li>
@@ -202,11 +202,11 @@ export function SharpTemplate({ cv, placeholders: p, sectionOrder }: Props) {
         {/* Personal details */}
         {(personal.birthday || personal.nationality || personal.driversLicense) && (
           <div className="cv-sharp__sidebar-section">
-            <h3 className="cv-sharp__sidebar-title">Details</h3>
+            <h3 className="cv-sharp__sidebar-title">{labels.details}</h3>
             <div className="cv-sharp__contact-list">
-              {personal.birthday && <div className="cv-sharp__detail-row">{formatBirthday(personal.birthday)}</div>}
+              {personal.birthday && <div className="cv-sharp__detail-row">{formatBirthday(personal.birthday, locale)}</div>}
               {personal.nationality && <div className="cv-sharp__detail-row">{personal.nationality}</div>}
-              {personal.driversLicense && <div className="cv-sharp__detail-row">Licence: {personal.driversLicense}</div>}
+              {personal.driversLicense && <div className="cv-sharp__detail-row">{labels.licence}: {personal.driversLicense}</div>}
             </div>
           </div>
         )}

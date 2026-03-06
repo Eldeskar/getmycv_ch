@@ -1,11 +1,13 @@
 import { useTranslation } from 'react-i18next'
-import { EducationEntry, CertificationEntry } from '../../types/cv'
+import { EducationEntry, CertificationEntry, CVLanguage } from '../../types/cv'
+import { ls, setLs } from '../../utils/resolveCV'
 import { nanoid } from '../../utils/nanoid'
 import { useDragReorder } from '../../hooks/useDragReorder'
 
 interface Props {
   data: EducationEntry[]
   certifications: CertificationEntry[]
+  lang: CVLanguage
   onChange: (data: EducationEntry[]) => void
   onCertificationsChange: (data: CertificationEntry[]) => void
 }
@@ -14,8 +16,8 @@ function emptyEntry(): EducationEntry {
   return {
     id: nanoid(),
     institution: '',
-    degree: '',
-    field: '',
+    degree: {},
+    field: {},
     startDate: '',
     endDate: '',
     grade: '',
@@ -25,14 +27,14 @@ function emptyEntry(): EducationEntry {
 function emptyCert(): CertificationEntry {
   return {
     id: nanoid(),
-    title: '',
+    title: {},
     institution: '',
     date: '',
-    description: '',
+    description: {},
   }
 }
 
-export function EducationSection({ data, certifications, onChange, onCertificationsChange }: Props) {
+export function EducationSection({ data, certifications, lang, onChange, onCertificationsChange }: Props) {
   const { t } = useTranslation()
   const { dragHandlers: eduDragHandlers, handleProps: eduHandleProps } = useDragReorder(data, onChange)
   const { dragHandlers: certDragHandlers, handleProps: certHandleProps } = useDragReorder(certifications, onCertificationsChange)
@@ -83,8 +85,8 @@ export function EducationSection({ data, certifications, onChange, onCertificati
               <input
                 type="text"
                 placeholder={t('editor.education.degreePlaceholder')}
-                value={entry.degree}
-                onChange={(e) => update(entry.id, { degree: e.target.value })}
+                value={ls(entry.degree, lang)}
+                onChange={(e) => update(entry.id, { degree: setLs(entry.degree, lang, e.target.value) })}
               />
             </div>
             <div className="field">
@@ -92,8 +94,8 @@ export function EducationSection({ data, certifications, onChange, onCertificati
               <input
                 type="text"
                 placeholder={t('editor.education.fieldPlaceholder')}
-                value={entry.field}
-                onChange={(e) => update(entry.id, { field: e.target.value })}
+                value={ls(entry.field, lang)}
+                onChange={(e) => update(entry.id, { field: setLs(entry.field, lang, e.target.value) })}
               />
             </div>
           </div>
@@ -152,8 +154,8 @@ export function EducationSection({ data, certifications, onChange, onCertificati
             <input
               type="text"
               placeholder={t('editor.education.certTitlePlaceholder')}
-              value={cert.title}
-              onChange={(e) => updateCert(cert.id, { title: e.target.value })}
+              value={ls(cert.title, lang)}
+              onChange={(e) => updateCert(cert.id, { title: setLs(cert.title, lang, e.target.value) })}
             />
           </div>
 
@@ -182,8 +184,8 @@ export function EducationSection({ data, certifications, onChange, onCertificati
             <input
               type="text"
               placeholder={t('editor.education.certDescriptionPlaceholder')}
-              value={cert.description}
-              onChange={(e) => updateCert(cert.id, { description: e.target.value })}
+              value={ls(cert.description, lang)}
+              onChange={(e) => updateCert(cert.id, { description: setLs(cert.description, lang, e.target.value) })}
             />
           </div>
         </div>

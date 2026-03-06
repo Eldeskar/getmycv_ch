@@ -93,8 +93,8 @@ a { color: inherit; }
   position: relative;
 }
 
-/* ─── Right Sidebar (Controls) ──────────────────────────────────────────────── */
-.app-controls {
+/* ─── Options Bar (Right) ─────────────────────────────────────────────────── */
+.options-bar {
   width: 280px;
   flex-shrink: 0;
   background: var(--color-surface);
@@ -251,59 +251,54 @@ a { color: inherit; }
   padding-bottom: 0.2rem;
 }
 
-/* Color swatches */
-.color-swatches {
+/* CV language switcher */
+.cv-lang-switcher {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  align-items: center;
+  gap: 0.3rem;
 }
-.color-swatch {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 2px solid transparent;
+.cv-lang-btn {
+  flex: 1;
+  padding: 0.35rem 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  font-size: 0.75rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.15s, transform 0.1s;
-  padding: 0;
+  color: var(--color-muted);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  font-family: inherit;
 }
-.color-swatch:hover { transform: scale(1.15); }
-.color-swatch--active { border-color: var(--color-text); }
-.color-swatch--custom {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 1px dashed var(--color-border);
-  padding: 0;
-  cursor: pointer;
-  overflow: hidden;
-  position: relative;
-}
-.color-swatch--custom input {
-  position: absolute;
-  inset: -4px;
-  width: 32px;
-  height: 32px;
-  border: none;
-  cursor: pointer;
-  opacity: 0;
+.cv-lang-btn:hover { border-color: var(--color-accent); color: var(--color-text); }
+.cv-lang-btn--active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
 }
 
-/* Font size slider */
-.font-size-control {
+/* Layout controls */
+.controls-select {
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.82rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  font-family: inherit;
+}
+.controls-toggle {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  cursor: pointer;
+  font-size: 13px;
+  user-select: none;
 }
-.font-size-control input[type="range"] {
-  flex: 1;
+.controls-toggle input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
   accent-color: var(--color-accent);
-}
-.font-size-control__value {
-  font-size: 0.78rem;
-  color: var(--color-muted);
-  min-width: 3ch;
-  text-align: right;
 }
 
 /* Section order */
@@ -337,44 +332,7 @@ a { color: inherit; }
 .section-order__btn:hover { color: var(--color-text); }
 .section-order__btn:disabled { opacity: 0.25; cursor: default; }
 
-/* Export controls in sidebar */
-.sidebar-export {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-.sidebar-export .export-btn {
-  width: 100%;
-  justify-content: center;
-}
 
-/* Controls select */
-.controls-select {
-  width: 100%;
-  padding: 0.4rem 0.5rem;
-  font-size: 0.82rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  background: var(--color-bg);
-  font-family: inherit;
-}
-
-/* Reset button */
-.btn-reset {
-  background: none;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 0.35rem 0.75rem;
-  font-size: 0.75rem;
-  color: var(--color-muted);
-  cursor: pointer;
-  font-family: inherit;
-  align-self: flex-start;
-}
-.btn-reset:hover {
-  color: var(--color-text);
-  border-color: var(--color-text);
-}
 
 .export-buttons {
   display: flex;
@@ -1167,13 +1125,18 @@ textarea { resize: vertical; }
 }
 
 /* ─── CV Style Custom Properties ────────────────────────────────────────────── */
-.cv-template {
+/* Defaults live on .preview-paper so inline style overrides take effect.
+   Derived accent shades reference var(--cv-accent) and update automatically. */
+.preview-paper,
+.tpl-picker__paper {
   --cv-font: system-ui, -apple-system, sans-serif;
   --cv-accent: #1e2a3a;
   --cv-accent-light: color-mix(in srgb, var(--cv-accent) 60%, #93c5fd);
   --cv-accent-lighter: color-mix(in srgb, var(--cv-accent) 15%, #f0f4f8);
   --cv-accent-subtle: color-mix(in srgb, var(--cv-accent) 40%, #7ea8d0);
   --cv-accent-tag: color-mix(in srgb, var(--cv-accent) 70%, #4a7ab5);
+}
+.cv-template {
   font-size: var(--cv-font-size, 100%);
 }
 
@@ -2403,22 +2366,6 @@ textarea { resize: vertical; }
   flex: 1;
 }
 
-/* ─── Controls toggle ──────────────────────────────────────────────────────── */
-.controls-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  font-size: 13px;
-  user-select: none;
-}
-.controls-toggle input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-  accent-color: var(--color-accent);
-}
-
 /* ─── Placeholder (example data) ─────────────────────────────────────────────── */
 .cv-placeholder { opacity: 0.35; }
 .cv-exporting {
@@ -2429,15 +2376,17 @@ textarea { resize: vertical; }
   width: 210mm !important;
 }
 .cv-exporting .cv-placeholder { display: none !important; }
+.cv-exporting .cv-photo-placeholder { display: none !important; }
 .cv-exporting .cv-template { background-image: none !important; }
 
 /* ─── Print ──────────────────────────────────────────────────────────────────── */
 @media print {
   .cv-placeholder { display: none !important; }
+  .cv-photo-placeholder { display: none !important; }
   .cv-template { background-image: none !important; }
   .app-header,
   .app-sidebar,
-  .app-controls,
+  .options-bar,
   .storage-banner,
   .template-picker,
   .export-bar { display: none !important; }

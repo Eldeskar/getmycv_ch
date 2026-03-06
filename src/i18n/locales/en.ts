@@ -171,13 +171,10 @@ const en = {
   sidebar: {
     template: 'Template',
     chooseTemplate: 'Choose a Template',
-    font: 'Font',
-    accentColor: 'Accent Color',
-    customColor: 'Custom color',
-    fontSize: 'Font Size',
+    cvLanguage: 'CV Language',
     sectionOrder: 'Section Order',
+    layout: 'Layout',
     spacedLayout: 'Spread sections across page',
-    reset: 'Reset to defaults',
     export: 'Export',
     sections: {
       summary: 'Summary',

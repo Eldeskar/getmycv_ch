@@ -1,5 +1,6 @@
-import { CV } from '../types/cv'
+import { CV, CVLanguage } from '../types/cv'
 import { EXAMPLE_CV } from '../data/exampleCV'
+import { resolveCV, ResolvedCV, ls, lsa } from './resolveCV'
 
 export interface PlaceholderMap {
   name: boolean
@@ -14,41 +15,44 @@ export interface PlaceholderMap {
   interests: boolean
 }
 
-export function buildDisplayCV(cv: CV): { displayCV: CV; placeholders: PlaceholderMap } {
+export function buildDisplayCV(cv: CV, lang: CVLanguage): { displayCV: ResolvedCV; placeholders: PlaceholderMap } {
   const placeholders: PlaceholderMap = {
     name: !cv.personal.name.trim(),
-    title: !cv.personal.title.trim(),
+    title: !ls(cv.personal.title, lang).trim(),
     contact: !cv.personal.email.trim() && !cv.personal.phone.trim(),
-    summary: !cv.personal.summary.trim(),
+    summary: !ls(cv.personal.summary, lang).trim(),
     experience: cv.experience.length === 0,
     education: cv.education.length === 0,
     skills: cv.skills.length === 0,
     languages: cv.languages.length === 0,
     certifications: cv.certifications.length === 0,
-    interests: cv.interests.length === 0,
+    interests: lsa(cv.interests, lang).length === 0,
   }
 
-  const displayCV: CV = {
+  const resolved = resolveCV(cv, lang)
+  const exampleResolved = resolveCV(EXAMPLE_CV, lang)
+
+  const displayCV: ResolvedCV = {
     personal: {
-      ...cv.personal,
-      name: placeholders.name ? EXAMPLE_CV.personal.name : cv.personal.name,
-      title: placeholders.title ? EXAMPLE_CV.personal.title : cv.personal.title,
-      email: placeholders.contact ? EXAMPLE_CV.personal.email : cv.personal.email,
-      phone: placeholders.contact ? EXAMPLE_CV.personal.phone : cv.personal.phone,
-      city: placeholders.contact ? EXAMPLE_CV.personal.city : cv.personal.city,
-      country: placeholders.contact ? EXAMPLE_CV.personal.country : cv.personal.country,
-      website: placeholders.contact ? EXAMPLE_CV.personal.website : cv.personal.website,
-      linkedin: placeholders.contact ? EXAMPLE_CV.personal.linkedin : cv.personal.linkedin,
-      github: placeholders.contact ? EXAMPLE_CV.personal.github : cv.personal.github,
-      summary: placeholders.summary ? EXAMPLE_CV.personal.summary : cv.personal.summary,
+      ...resolved.personal,
+      name: placeholders.name ? exampleResolved.personal.name : resolved.personal.name,
+      title: placeholders.title ? exampleResolved.personal.title : resolved.personal.title,
+      email: placeholders.contact ? exampleResolved.personal.email : resolved.personal.email,
+      phone: placeholders.contact ? exampleResolved.personal.phone : resolved.personal.phone,
+      city: placeholders.contact ? exampleResolved.personal.city : resolved.personal.city,
+      country: placeholders.contact ? exampleResolved.personal.country : resolved.personal.country,
+      website: placeholders.contact ? exampleResolved.personal.website : resolved.personal.website,
+      linkedin: placeholders.contact ? exampleResolved.personal.linkedin : resolved.personal.linkedin,
+      github: placeholders.contact ? exampleResolved.personal.github : resolved.personal.github,
+      summary: placeholders.summary ? exampleResolved.personal.summary : resolved.personal.summary,
     },
-    experience: placeholders.experience ? EXAMPLE_CV.experience : cv.experience,
-    education: placeholders.education ? EXAMPLE_CV.education : cv.education,
-    skills: placeholders.skills ? EXAMPLE_CV.skills : cv.skills,
-    languages: placeholders.languages ? EXAMPLE_CV.languages : cv.languages,
-    projects: cv.projects,
-    certifications: placeholders.certifications ? EXAMPLE_CV.certifications : cv.certifications,
-    interests: placeholders.interests ? EXAMPLE_CV.interests : cv.interests,
+    experience: placeholders.experience ? exampleResolved.experience : resolved.experience,
+    education: placeholders.education ? exampleResolved.education : resolved.education,
+    skills: placeholders.skills ? exampleResolved.skills : resolved.skills,
+    languages: placeholders.languages ? exampleResolved.languages : resolved.languages,
+    projects: resolved.projects,
+    certifications: placeholders.certifications ? exampleResolved.certifications : resolved.certifications,
+    interests: placeholders.interests ? exampleResolved.interests : resolved.interests,
   }
 
   return { displayCV, placeholders }

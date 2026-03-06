@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CV, TemplateId, StyleSettings, CVSectionId, DEFAULT_STYLE } from '../types/cv'
+import { CV, TemplateId, StyleSettings, CVSectionId, CVLanguage, CV_LANGUAGES } from '../types/cv'
 import { exportPDF, exportJSON, importJSON } from '../utils/export'
 import { TemplatePicker } from './TemplatePicker'
 
@@ -10,11 +10,6 @@ const FONT_OPTIONS = [
   { value: '"Helvetica Neue", Arial, sans-serif', label: 'Helvetica' },
   { value: 'Garamond, "EB Garamond", serif', label: 'Garamond' },
   { value: 'Verdana, Geneva, sans-serif', label: 'Verdana' },
-]
-
-const COLOR_PRESETS = [
-  '#1e2a3a', '#0072b1', '#0f766e', '#7c3aed',
-  '#dc2626', '#ea580c', '#16a34a', '#525252',
 ]
 
 // Two-column templates only allow reordering main-column sections
@@ -27,10 +22,12 @@ interface Props {
   styleSettings: StyleSettings
   onStyleChange: (s: StyleSettings) => void
   cv: CV
+  cvLanguage: CVLanguage
+  onCVLanguageChange: (lang: CVLanguage) => void
   previewId: string
 }
 
-export function RightSidebar({ selectedTemplate, onTemplateChange, styleSettings, onStyleChange, cv, previewId }: Props) {
+export function OptionsBar({ selectedTemplate, onTemplateChange, styleSettings, onStyleChange, cv, cvLanguage, onCVLanguageChange, previewId }: Props) {
   const { t } = useTranslation()
   const [exporting, setExporting] = useState(false)
   const [showPicker, setShowPicker] = useState(false)
@@ -54,12 +51,8 @@ export function RightSidebar({ selectedTemplate, onTemplateChange, styleSettings
     updateStyle({ sectionOrder: order })
   }
 
-  function resetStyles() {
-    onStyleChange({ ...DEFAULT_STYLE })
-  }
-
   return (
-    <aside className="app-controls">
+    <aside className="options-bar">
       {/* Template */}
       <div className="controls-section">
         <div className="controls-section__title">{t('sidebar.template')}</div>
@@ -79,68 +72,20 @@ export function RightSidebar({ selectedTemplate, onTemplateChange, styleSettings
         />
       )}
 
-      {/* Font */}
+      {/* CV Language */}
       <div className="controls-section">
-        <div className="controls-section__title">{t('sidebar.font')}</div>
-        <select
-          className="controls-select"
-          value={styleSettings.fontFamily}
-          onChange={(e) => updateStyle({ fontFamily: e.target.value })}
-        >
-          {FONT_OPTIONS.map((f) => (
-            <option key={f.value} value={f.value}>{f.label}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Accent Color */}
-      <div className="controls-section">
-        <div className="controls-section__title">{t('sidebar.accentColor')}</div>
-        <div className="color-swatches">
-          {COLOR_PRESETS.map((color) => (
+        <div className="controls-section__title">{t('sidebar.cvLanguage')}</div>
+        <div className="cv-lang-switcher">
+          {CV_LANGUAGES.map((lang) => (
             <button
-              key={color}
-              className={`color-swatch${styleSettings.accentColor === color ? ' color-swatch--active' : ''}`}
-              style={{ background: color }}
-              onClick={() => updateStyle({ accentColor: color })}
-            />
+              key={lang.code}
+              className={`cv-lang-btn${cvLanguage === lang.code ? ' cv-lang-btn--active' : ''}`}
+              onClick={() => onCVLanguageChange(lang.code)}
+            >
+              {lang.code.toUpperCase()}
+            </button>
           ))}
-          <label className="color-swatch--custom" title={t('sidebar.customColor')}>
-            <input
-              type="color"
-              value={styleSettings.accentColor}
-              onChange={(e) => updateStyle({ accentColor: e.target.value })}
-            />
-          </label>
         </div>
-      </div>
-
-      {/* Font Size */}
-      <div className="controls-section">
-        <div className="controls-section__title">{t('sidebar.fontSize')}</div>
-        <div className="font-size-control">
-          <input
-            type="range"
-            min={80}
-            max={120}
-            step={5}
-            value={styleSettings.fontSize}
-            onChange={(e) => updateStyle({ fontSize: Number(e.target.value) })}
-          />
-          <span className="font-size-control__value">{styleSettings.fontSize}%</span>
-        </div>
-      </div>
-
-      {/* Spaced Layout */}
-      <div className="controls-section">
-        <label className="controls-toggle">
-          <input
-            type="checkbox"
-            checked={styleSettings.spacedLayout}
-            onChange={(e) => updateStyle({ spacedLayout: e.target.checked })}
-          />
-          <span>{t('sidebar.spacedLayout')}</span>
-        </label>
       </div>
 
       {/* Section Order */}
@@ -167,6 +112,28 @@ export function RightSidebar({ selectedTemplate, onTemplateChange, styleSettings
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Layout */}
+      <div className="controls-section">
+        <div className="controls-section__title">{t('sidebar.layout')}</div>
+        <select
+          className="controls-select"
+          value={styleSettings.fontFamily}
+          onChange={(e) => updateStyle({ fontFamily: e.target.value })}
+        >
+          {FONT_OPTIONS.map((f) => (
+            <option key={f.value} value={f.value}>{f.label}</option>
+          ))}
+        </select>
+        <label className="controls-toggle">
+          <input
+            type="checkbox"
+            checked={styleSettings.spacedLayout}
+            onChange={(e) => updateStyle({ spacedLayout: e.target.checked })}
+          />
+          <span>{t('sidebar.spacedLayout')}</span>
+        </label>
       </div>
 
       {/* Export */}
@@ -217,12 +184,6 @@ export function RightSidebar({ selectedTemplate, onTemplateChange, styleSettings
           />
         </div>
       </div>
-
-      {/* Reset */}
-      <button className="btn-reset" onClick={resetStyles}>
-        {t('sidebar.reset')}
-      </button>
-
     </aside>
   )
 }

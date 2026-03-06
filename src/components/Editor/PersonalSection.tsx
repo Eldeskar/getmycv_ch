@@ -1,15 +1,17 @@
 import { useRef, useState, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
-import { PersonalInfo } from '../../types/cv'
+import { PersonalInfo, CVLanguage } from '../../types/cv'
+import { ls, setLs } from '../../utils/resolveCV'
 import { compressImage } from '../../utils/imageUtils'
 
 interface Props {
   data: PersonalInfo
+  lang: CVLanguage
   onChange: (data: PersonalInfo) => void
 }
 
-export function PersonalSection({ data, onChange }: Props) {
+export function PersonalSection({ data, lang, onChange }: Props) {
   const { t } = useTranslation()
   const [photoError, setPhotoError] = useState('')
   const [photoLoading, setPhotoLoading] = useState(false)
@@ -221,8 +223,8 @@ export function PersonalSection({ data, onChange }: Props) {
           id="personal-title"
           type="text"
           placeholder={t('editor.personal.titlePlaceholder')}
-          value={data.title}
-          onChange={(e) => set('title', e.target.value)}
+          value={ls(data.title, lang)}
+          onChange={(e) => set('title', setLs(data.title, lang, e.target.value))}
         />
       </div>
 
@@ -384,8 +386,8 @@ export function PersonalSection({ data, onChange }: Props) {
           id="personal-summary"
           rows={4}
           placeholder={t('editor.personal.summaryPlaceholder')}
-          value={data.summary}
-          onChange={(e) => set('summary', e.target.value)}
+          value={ls(data.summary, lang)}
+          onChange={(e) => set('summary', setLs(data.summary, lang, e.target.value))}
         />
       </div>
     </section>

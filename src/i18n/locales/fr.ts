@@ -171,13 +171,10 @@ const fr = {
   sidebar: {
     template: 'Modèle',
     chooseTemplate: 'Choisir un modèle',
-    font: 'Police',
-    accentColor: "Couleur d'accent",
-    customColor: 'Couleur personnalisée',
-    fontSize: 'Taille de police',
+    cvLanguage: 'Langue du CV',
     sectionOrder: 'Ordre des sections',
+    layout: 'Mise en page',
     spacedLayout: 'Répartir les sections sur la page',
-    reset: 'Réinitialiser',
     export: 'Exporter',
     sections: {
       summary: 'Résumé',

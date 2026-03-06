@@ -1,26 +1,28 @@
 import { useTranslation } from 'react-i18next'
-import { SkillGroup, LanguageEntry } from '../../types/cv'
+import { SkillGroup, LanguageEntry, CVLanguage, LocalizedStringArray } from '../../types/cv'
+import { ls, setLs, lsa, setLsa } from '../../utils/resolveCV'
 import { nanoid } from '../../utils/nanoid'
 import { useDragReorder } from '../../hooks/useDragReorder'
 
 interface Props {
   skills: SkillGroup[]
   languages: LanguageEntry[]
-  interests: string[]
+  interests: LocalizedStringArray
+  lang: CVLanguage
   onSkillsChange: (skills: SkillGroup[]) => void
   onLanguagesChange: (languages: LanguageEntry[]) => void
-  onInterestsChange: (interests: string[]) => void
+  onInterestsChange: (interests: LocalizedStringArray) => void
 }
 
 const LANGUAGE_LEVELS = ['Native', 'C2', 'C1', 'B2', 'B1', 'A2', 'A1']
 
-export function SkillsSection({ skills, languages, interests, onSkillsChange, onLanguagesChange, onInterestsChange }: Props) {
+export function SkillsSection({ skills, languages, interests, lang, onSkillsChange, onLanguagesChange, onInterestsChange }: Props) {
   const { t } = useTranslation()
   const { dragHandlers: skillDragHandlers, handleProps: skillHandleProps } = useDragReorder(skills, onSkillsChange)
   const { dragHandlers: langDragHandlers, handleProps: langHandleProps } = useDragReorder(languages, onLanguagesChange)
 
   function addSkillGroup() {
-    onSkillsChange([...skills, { id: nanoid(), category: '', items: [], levels: {} }])
+    onSkillsChange([...skills, { id: nanoid(), category: {}, items: [], levels: {} }])
   }
 
   function updateGroup(id: string, patch: Partial<SkillGroup>) {
@@ -56,11 +58,11 @@ export function SkillsSection({ skills, languages, interests, onSkillsChange, on
   }
 
   function updateInterests(raw: string) {
-    onInterestsChange(raw.split(',').map((s) => s.trim()))
+    onInterestsChange(setLsa(interests, lang, raw.split(',').map((s) => s.trim())))
   }
 
   function cleanInterests() {
-    onInterestsChange(interests.filter(Boolean))
+    onInterestsChange(setLsa(interests, lang, lsa(interests, lang).filter(Boolean)))
   }
 
   return (
@@ -76,8 +78,8 @@ export function SkillsSection({ skills, languages, interests, onSkillsChange, on
               <input
                 type="text"
                 placeholder={t('editor.skills.categoryPlaceholder')}
-                value={group.category}
-                onChange={(e) => updateGroup(group.id, { category: e.target.value })}
+                value={ls(group.category, lang)}
+                onChange={(e) => updateGroup(group.id, { category: setLs(group.category, lang, e.target.value) })}
               />
             </div>
             <button className="btn-icon btn-danger" onClick={() => removeGroup(group.id)}>
@@ -178,7 +180,7 @@ export function SkillsSection({ skills, languages, interests, onSkillsChange, on
         <input
           type="text"
           placeholder={t('editor.skills.interestsPlaceholder')}
-          value={interests.join(', ')}
+          value={lsa(interests, lang).join(', ')}
           onChange={(e) => updateInterests(e.target.value)}
           onBlur={cleanInterests}
         />

@@ -1,10 +1,12 @@
 import { useTranslation } from 'react-i18next'
-import { ExperienceEntry } from '../../types/cv'
+import { ExperienceEntry, CVLanguage } from '../../types/cv'
+import { ls, setLs, lsa, setLsa } from '../../utils/resolveCV'
 import { nanoid } from '../../utils/nanoid'
 import { useDragReorder } from '../../hooks/useDragReorder'
 
 interface Props {
   data: ExperienceEntry[]
+  lang: CVLanguage
   onChange: (data: ExperienceEntry[]) => void
 }
 
@@ -12,16 +14,16 @@ function emptyEntry(): ExperienceEntry {
   return {
     id: nanoid(),
     company: '',
-    role: '',
+    role: {},
     location: '',
     startDate: '',
     endDate: '',
     current: false,
-    bullets: [''],
+    bullets: {},
   }
 }
 
-export function ExperienceSection({ data, onChange }: Props) {
+export function ExperienceSection({ data, lang, onChange }: Props) {
   const { t } = useTranslation()
   const { dragHandlers, handleProps } = useDragReorder(data, onChange)
 
@@ -37,19 +39,24 @@ export function ExperienceSection({ data, onChange }: Props) {
     onChange([...data, emptyEntry()])
   }
 
+  function getBullets(entry: ExperienceEntry): string[] {
+    const b = lsa(entry.bullets, lang)
+    return b.length > 0 ? b : ['']
+  }
+
   function updateBullet(entry: ExperienceEntry, index: number, value: string) {
-    const bullets = [...entry.bullets]
+    const bullets = [...getBullets(entry)]
     bullets[index] = value
-    update(entry.id, { bullets })
+    update(entry.id, { bullets: setLsa(entry.bullets, lang, bullets) })
   }
 
   function addBullet(entry: ExperienceEntry) {
-    update(entry.id, { bullets: [...entry.bullets, ''] })
+    update(entry.id, { bullets: setLsa(entry.bullets, lang, [...getBullets(entry), '']) })
   }
 
   function removeBullet(entry: ExperienceEntry, index: number) {
-    const bullets = entry.bullets.filter((_, i) => i !== index)
-    update(entry.id, { bullets: bullets.length ? bullets : [''] })
+    const bullets = getBullets(entry).filter((_, i) => i !== index)
+    update(entry.id, { bullets: setLsa(entry.bullets, lang, bullets.length ? bullets : ['']) })
   }
 
   return (
@@ -72,8 +79,8 @@ export function ExperienceSection({ data, onChange }: Props) {
               <input
                 type="text"
                 placeholder={t('editor.experience.jobTitlePlaceholder')}
-                value={entry.role}
-                onChange={(e) => update(entry.id, { role: e.target.value })}
+                value={ls(entry.role, lang)}
+                onChange={(e) => update(entry.id, { role: setLs(entry.role, lang, e.target.value) })}
               />
             </div>
             <div className="field">
@@ -130,7 +137,7 @@ export function ExperienceSection({ data, onChange }: Props) {
 
           <div className="field">
             <label>{t('editor.experience.bullets')}</label>
-            {entry.bullets.map((bullet, bi) => (
+            {getBullets(entry).map((bullet, bi) => (
               <div key={bi} className="bullet-row">
                 <span className="bullet-dot">•</span>
                 <input
@@ -139,7 +146,7 @@ export function ExperienceSection({ data, onChange }: Props) {
                   value={bullet}
                   onChange={(e) => updateBullet(entry, bi, e.target.value)}
                 />
-                {entry.bullets.length > 1 && (
+                {getBullets(entry).length > 1 && (
                   <button
                     className="btn-icon btn-danger"
                     onClick={() => removeBullet(entry, bi)}

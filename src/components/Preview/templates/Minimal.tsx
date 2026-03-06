@@ -1,30 +1,32 @@
 import React from 'react'
-import { CV, CVSectionId } from '../../../types/cv'
+import { CVSectionId } from '../../../types/cv'
+import { ResolvedCV } from '../../../utils/resolveCV'
 import { formatDate } from '../../../utils/formatDate'
 import { formatPhone } from '../../../utils/formatPhone'
 import { PlaceholderMap } from '../../../utils/placeholderCV'
+import { CVLabels } from '../../../utils/cvLabels'
 import { CvPhoto } from '../CvPhoto'
 
-interface Props { cv: CV; placeholders?: PlaceholderMap; sectionOrder: CVSectionId[] }
+interface Props { cv: ResolvedCV; placeholders?: PlaceholderMap; sectionOrder: CVSectionId[]; labels: CVLabels; locale: string }
 
 function cityCountry(city: string, country: string): string {
   return [city, country].filter(Boolean).join(', ')
 }
 
-function formatBirthday(value: string): string {
+function formatBirthday(value: string, locale: string): string {
   if (!value) return ''
   try {
-    return new Date(value).toLocaleDateString('en', { day: 'numeric', month: 'long', year: 'numeric' })
+    return new Date(value).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })
   } catch {
     return value
   }
 }
 
-export function MinimalTemplate({ cv, placeholders: p, sectionOrder }: Props) {
+export function MinimalTemplate({ cv, placeholders: p, sectionOrder, labels, locale }: Props) {
   const { personal, experience, education, skills, languages, certifications, interests } = cv
   const location = cityCountry(personal.city, personal.country)
   const details = [
-    personal.birthday && formatBirthday(personal.birthday),
+    personal.birthday && formatBirthday(personal.birthday, locale),
     personal.nationality,
     personal.driversLicense && `Licence ${personal.driversLicense}`,
   ].filter(Boolean)
@@ -42,12 +44,12 @@ export function MinimalTemplate({ cv, placeholders: p, sectionOrder }: Props) {
       experience.length > 0 ? (
         <div className={p?.experience ? 'cv-placeholder' : ''}>
           <div className="cv-minimal__divider" />
-          <h2 className="cv-minimal__section-title">Experience</h2>
+          <h2 className="cv-minimal__section-title">{labels.experience}</h2>
           {experience.map((exp) => (
             <div key={exp.id} className="cv-minimal__entry">
               <div className="cv-minimal__entry-meta">
                 <span className="cv-minimal__entry-dates">
-                  {formatDate(exp.startDate)} – {exp.current ? 'Now' : formatDate(exp.endDate)}
+                  {formatDate(exp.startDate, locale)} – {exp.current ? labels.present : formatDate(exp.endDate, locale)}
                 </span>
               </div>
               <div className="cv-minimal__entry-body">
@@ -69,11 +71,11 @@ export function MinimalTemplate({ cv, placeholders: p, sectionOrder }: Props) {
       education.length > 0 ? (
         <div className={p?.education ? 'cv-placeholder' : ''}>
           <div className="cv-minimal__divider" />
-          <h2 className="cv-minimal__section-title">Education</h2>
+          <h2 className="cv-minimal__section-title">{labels.education}</h2>
           {education.map((edu) => (
             <div key={edu.id} className="cv-minimal__entry">
               <div className="cv-minimal__entry-meta">
-                <span className="cv-minimal__entry-dates">{formatDate(edu.endDate)}</span>
+                <span className="cv-minimal__entry-dates">{formatDate(edu.endDate, locale)}</span>
               </div>
               <div className="cv-minimal__entry-body">
                 <div className="cv-minimal__entry-title">
@@ -90,7 +92,7 @@ export function MinimalTemplate({ cv, placeholders: p, sectionOrder }: Props) {
       (skills.length > 0 || languages.length > 0) ? (
         <div className={p?.skills && p?.languages ? 'cv-placeholder' : ''}>
           <div className="cv-minimal__divider" />
-          <h2 className="cv-minimal__section-title">Skills</h2>
+          <h2 className="cv-minimal__section-title">{labels.skills}</h2>
           <div className="cv-minimal__skills">
             {skills.map((group) => (
               <div key={group.id}>
@@ -100,7 +102,7 @@ export function MinimalTemplate({ cv, placeholders: p, sectionOrder }: Props) {
             ))}
             {languages.length > 0 && (
               <div>
-                <span className="cv-minimal__skill-cat">Languages: </span>
+                <span className="cv-minimal__skill-cat">{labels.languages}: </span>
                 {languages.map((l) => `${l.language} (${l.level})`).join(' · ')}
               </div>
             )}
@@ -114,11 +116,11 @@ export function MinimalTemplate({ cv, placeholders: p, sectionOrder }: Props) {
       certifications.length > 0 ? (
         <div className={p?.certifications ? 'cv-placeholder' : ''}>
           <div className="cv-minimal__divider" />
-          <h2 className="cv-minimal__section-title">Certifications</h2>
+          <h2 className="cv-minimal__section-title">{labels.certifications}</h2>
           {certifications.map((cert) => (
             <div key={cert.id} className="cv-minimal__entry">
               <div className="cv-minimal__entry-meta">
-                <span className="cv-minimal__entry-dates">{formatDate(cert.date)}</span>
+                <span className="cv-minimal__entry-dates">{formatDate(cert.date, locale)}</span>
               </div>
               <div className="cv-minimal__entry-body">
                 <div className="cv-minimal__entry-title">
@@ -136,7 +138,7 @@ export function MinimalTemplate({ cv, placeholders: p, sectionOrder }: Props) {
       interests.length > 0 ? (
         <div className={p?.interests ? 'cv-placeholder' : ''}>
           <div className="cv-minimal__divider" />
-          <h2 className="cv-minimal__section-title">Interests</h2>
+          <h2 className="cv-minimal__section-title">{labels.interests}</h2>
           <div className="cv-minimal__skills">{interests.join(' · ')}</div>
         </div>
       ) : null,
@@ -172,9 +174,7 @@ export function MinimalTemplate({ cv, placeholders: p, sectionOrder }: Props) {
             <div className="cv-minimal__details">{details.join(' · ')}</div>
           )}
         </div>
-        {personal.photo && (
-          <CvPhoto personal={personal} className="cv-photo cv-minimal__photo" />
-        )}
+        <CvPhoto personal={personal} className="cv-photo cv-minimal__photo" />
       </div>
 
       {sectionOrder.map((id) => {
