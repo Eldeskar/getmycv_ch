@@ -3,6 +3,7 @@ const de = {
     tagline: 'Ihre Daten bleiben in Ihrem Browser',
     editCV: 'Lebenslauf bearbeiten',
     settings: 'Einstellungen',
+    close: 'Schliessen',
   },
   preview: {
     emptyTitle: 'Ihre Lebenslauf-Vorschau erscheint hier',

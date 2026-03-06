@@ -3,6 +3,7 @@ const it = {
     tagline: 'I tuoi dati rimangono nel tuo browser',
     editCV: 'Modifica CV',
     settings: 'Impostazioni',
+    close: 'Chiudi',
   },
   preview: {
     emptyTitle: "L'anteprima del tuo CV apparirà qui",

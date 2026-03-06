@@ -3,6 +3,7 @@ const en = {
     tagline: 'Your data stays in your browser',
     editCV: 'Edit CV',
     settings: 'Settings',
+    close: 'Close',
   },
   preview: {
     emptyTitle: 'Your CV preview will appear here',
