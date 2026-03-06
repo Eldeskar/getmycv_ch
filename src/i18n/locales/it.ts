@@ -1,6 +1,8 @@
 const it = {
   app: {
     tagline: 'I tuoi dati rimangono nel tuo browser',
+    editCV: 'Modifica CV',
+    settings: 'Impostazioni',
   },
   preview: {
     emptyTitle: "L'anteprima del tuo CV apparirà qui",

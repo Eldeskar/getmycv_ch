@@ -1,6 +1,8 @@
 const en = {
   app: {
     tagline: 'Your data stays in your browser',
+    editCV: 'Edit CV',
+    settings: 'Settings',
   },
   preview: {
     emptyTitle: 'Your CV preview will appear here',

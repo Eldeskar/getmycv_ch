@@ -1,6 +1,8 @@
 const fr = {
   app: {
     tagline: 'Vos données restent dans votre navigateur',
+    editCV: 'Modifier le CV',
+    settings: 'Paramètres',
   },
   preview: {
     emptyTitle: "L'aperçu de votre CV apparaîtra ici",

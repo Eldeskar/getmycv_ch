@@ -30,9 +30,10 @@ interface Props {
   cvLanguage: CVLanguage
   onCVLanguageChange: (lang: CVLanguage) => void
   previewId: string
+  className?: string
 }
 
-export function OptionsBar({ selectedTemplate, onTemplateChange, styleSettings, onStyleChange, cv, cvLanguage, onCVLanguageChange, previewId }: Props) {
+export function OptionsBar({ selectedTemplate, onTemplateChange, styleSettings, onStyleChange, cv, cvLanguage, onCVLanguageChange, previewId, className }: Props) {
   const { t } = useTranslation()
   const [exporting, setExporting] = useState(false)
   const [showPicker, setShowPicker] = useState(false)
@@ -57,7 +58,7 @@ export function OptionsBar({ selectedTemplate, onTemplateChange, styleSettings, 
   }
 
   return (
-    <aside className="options-bar">
+    <aside className={`options-bar${className ? ` ${className}` : ''}`}>
       {/* Template */}
       <div className="controls-section">
         <div className="controls-section__title">{t('sidebar.template')}</div>

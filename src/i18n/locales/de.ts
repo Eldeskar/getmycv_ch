@@ -1,6 +1,8 @@
 const de = {
   app: {
     tagline: 'Ihre Daten bleiben in Ihrem Browser',
+    editCV: 'Lebenslauf bearbeiten',
+    settings: 'Einstellungen',
   },
   preview: {
     emptyTitle: 'Ihre Lebenslauf-Vorschau erscheint hier',
