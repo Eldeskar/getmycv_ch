@@ -58,10 +58,6 @@ a { color: inherit; }
   letter-spacing: -0.02em;
 }
 
-.app-header__tagline {
-  font-size: 0.8rem;
-  color: var(--color-muted);
-}
 
 .app-header__right {
   display: flex;
@@ -2503,16 +2499,14 @@ textarea { resize: vertical; }
     background: rgba(0, 0, 0, 0.3);
   }
 
-  /* No zoom controls on touch devices — native scroll/pinch instead */
+  /* No zoom controls on touch devices — scale to fit instead */
   .preview-zoom-controls { display: none; }
-  .preview-zoom-scroller { padding: 0.5rem; }
-  .preview-zoom-sizer {
-    width: 100% !important;
-    height: auto !important;
-  }
-  .preview-zoom-sizer > .preview-paper {
-    transform: none !important;
-    width: 100%;
+}
+
+/* ─── Phone (≤480px) ─────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .app-footer__link-text {
+    display: none;
   }
 }
 

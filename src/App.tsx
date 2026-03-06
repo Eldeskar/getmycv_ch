@@ -55,7 +55,6 @@ export default function App() {
         </button>
         <div className="app-header__brand">
           <span className="app-header__logo">GetMyCV</span>
-          <span className="app-header__tagline">{t('app.tagline')}</span>
         </div>
         <div className="app-header__right">
           <StorageIndicator lastSaved={lastSaved} />
