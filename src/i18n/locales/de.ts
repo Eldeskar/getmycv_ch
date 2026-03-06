@@ -196,7 +196,7 @@ const de = {
   footer: {
     contact: 'Fragen oder Feedback?',
     sourceCode: 'Quellcode auf GitHub',
-    privacy: 'Es werden keine Daten auf unseren Servern gespeichert. Ihr Lebenslauf befindet sich nur in Ihrem Browser.',
+    privacy: 'Alle Daten werden lokal auf Ihrem Gerät gespeichert.',
     copyright: '© {{year}} getmycv.ch',
   },
 } as const

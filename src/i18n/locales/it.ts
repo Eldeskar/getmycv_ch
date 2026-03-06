@@ -196,7 +196,7 @@ const it = {
   footer: {
     contact: 'Domande o feedback?',
     sourceCode: 'Codice sorgente su GitHub',
-    privacy: 'Nessun dato viene memorizzato sui nostri server. Il tuo CV vive solo nel tuo browser.',
+    privacy: 'Tutti i dati sono memorizzati localmente sul tuo dispositivo.',
     copyright: '© {{year}} getmycv.ch',
   },
 } as const
