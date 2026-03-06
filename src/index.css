@@ -466,33 +466,22 @@ a { color: inherit; }
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--color-muted);
   cursor: default;
 }
-
 .storage-indicator__dot {
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: var(--color-muted);
-  transition: background 0.3s;
+  flex-shrink: 0;
 }
-.storage-indicator__dot--saved {
+.storage-indicator__dot--ok {
   background: var(--color-success);
 }
-
-.storage-indicator__hint {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--color-border);
-  font-size: 0.7rem;
-  cursor: help;
+.storage-indicator__dot--blocked {
+  background: #dc2626;
 }
 
 /* ─── Footer ─────────────────────────────────────────────────────────────────── */
@@ -2506,6 +2495,9 @@ textarea { resize: vertical; }
 /* ─── Phone (≤480px) ─────────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
   .app-footer__link-text {
+    display: none;
+  }
+  .storage-indicator__text {
     display: none;
   }
 }

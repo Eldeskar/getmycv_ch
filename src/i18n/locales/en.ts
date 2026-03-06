@@ -19,13 +19,8 @@ const en = {
     dismiss: 'Dismiss',
   },
   storage: {
-    savedLocally: 'Saved locally',
-    notSaved: 'Not yet saved',
-    justNow: 'just now',
-    secondsAgo: '{{count}}s ago',
-    minutesAgo: '{{count}}m ago',
-    hoursAgo: '{{count}}h ago',
-    tooltip: 'Your CV is only saved in this browser. Export regularly to avoid losing your data.',
+    localOk: 'Data stored locally',
+    localBlocked: 'Local storage unavailable',
   },
   editor: {
     tabs: {

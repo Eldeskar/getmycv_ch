@@ -19,13 +19,8 @@ const de = {
     dismiss: 'Schliessen',
   },
   storage: {
-    savedLocally: 'Lokal gespeichert',
-    notSaved: 'Noch nicht gespeichert',
-    justNow: 'gerade eben',
-    secondsAgo: 'vor {{count}}s',
-    minutesAgo: 'vor {{count}}m',
-    hoursAgo: 'vor {{count}}h',
-    tooltip: 'Ihr Lebenslauf wird nur in diesem Browser gespeichert. Exportieren Sie regelmässig, um Datenverlust zu vermeiden.',
+    localOk: 'Daten lokal gespeichert',
+    localBlocked: 'Lokaler Speicher nicht verfügbar',
   },
   editor: {
     tabs: {

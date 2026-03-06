@@ -1,30 +1,34 @@
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-interface Props {
-  lastSaved: number | null
+function canUseLocalStorage(): boolean {
+  try {
+    const key = '__storage_test__'
+    localStorage.setItem(key, '1')
+    localStorage.removeItem(key)
+    return true
+  } catch {
+    return false
+  }
 }
 
-export function StorageIndicator({ lastSaved }: Props) {
+export function StorageIndicator() {
   const { t } = useTranslation()
+  const [available, setAvailable] = useState(true)
 
-  function relativeTime(ts: number): string {
-    const diff = Math.floor((Date.now() - ts) / 1000)
-    if (diff < 5) return t('storage.justNow')
-    if (diff < 60) return t('storage.secondsAgo', { count: diff })
-    if (diff < 3600) return t('storage.minutesAgo', { count: Math.floor(diff / 60) })
-    return t('storage.hoursAgo', { count: Math.floor(diff / 3600) })
-  }
+  useEffect(() => {
+    setAvailable(canUseLocalStorage())
+  }, [])
 
   return (
-    <div className="storage-indicator" title={t('storage.tooltip')}>
-      <span className={`storage-indicator__dot${lastSaved ? ' storage-indicator__dot--saved' : ''}`} />
+    <div
+      className="storage-indicator"
+      title={available ? t('storage.localOk') : t('storage.localBlocked')}
+    >
+      <span className={`storage-indicator__dot${available ? ' storage-indicator__dot--ok' : ' storage-indicator__dot--blocked'}`} />
       <span className="storage-indicator__text">
-        {lastSaved
-          ? `${t('storage.savedLocally')} · ${relativeTime(lastSaved)}`
-          : t('storage.notSaved')
-        }
+        {available ? t('storage.localOk') : t('storage.localBlocked')}
       </span>
-      <span className="storage-indicator__hint">?</span>
     </div>
   )
 }

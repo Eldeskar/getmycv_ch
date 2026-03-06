@@ -19,13 +19,8 @@ const fr = {
     dismiss: 'Fermer',
   },
   storage: {
-    savedLocally: 'Enregistré localement',
-    notSaved: 'Pas encore enregistré',
-    justNow: "à l'instant",
-    secondsAgo: 'il y a {{count}}s',
-    minutesAgo: 'il y a {{count}}m',
-    hoursAgo: 'il y a {{count}}h',
-    tooltip: 'Votre CV est uniquement enregistré dans ce navigateur. Exportez régulièrement pour éviter toute perte de données.',
+    localOk: 'Données stockées localement',
+    localBlocked: 'Stockage local indisponible',
   },
   editor: {
     tabs: {

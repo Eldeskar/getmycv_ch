@@ -19,13 +19,8 @@ const it = {
     dismiss: 'Chiudi',
   },
   storage: {
-    savedLocally: 'Salvato localmente',
-    notSaved: 'Non ancora salvato',
-    justNow: 'proprio ora',
-    secondsAgo: '{{count}}s fa',
-    minutesAgo: '{{count}}m fa',
-    hoursAgo: '{{count}}h fa',
-    tooltip: 'Il tuo CV è salvato solo in questo browser. Esporta regolarmente per evitare la perdita di dati.',
+    localOk: 'Dati memorizzati localmente',
+    localBlocked: 'Archiviazione locale non disponibile',
   },
   editor: {
     tabs: {
