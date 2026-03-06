@@ -2457,15 +2457,17 @@ textarea { resize: vertical; }
     display: flex;
     align-items: center;
     justify-content: center;
-    background: none;
-    border: none;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
     cursor: pointer;
-    color: var(--color-text);
-    padding: 0.4rem;
+    color: var(--color-muted);
+    padding: 0.45rem;
     border-radius: var(--radius);
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
   }
   .panel-toggle:hover {
     background: var(--color-border);
+    color: var(--color-text);
   }
 
   .app-sidebar,
@@ -2501,6 +2503,17 @@ textarea { resize: vertical; }
     background: rgba(0, 0, 0, 0.3);
   }
 
+  /* No zoom controls on touch devices — native scroll/pinch instead */
+  .preview-zoom-controls { display: none; }
+  .preview-zoom-scroller { padding: 0.5rem; }
+  .preview-zoom-sizer {
+    width: 100% !important;
+    height: auto !important;
+  }
+  .preview-zoom-sizer > .preview-paper {
+    transform: none !important;
+    width: 100%;
+  }
 }
 
 /* ─── Print ──────────────────────────────────────────────────────────────────── */
