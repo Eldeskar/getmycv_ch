@@ -15,27 +15,34 @@ export function PreviewZoom({ children, style, id, className }: Props) {
   const { t } = useTranslation()
   const [zoom, setZoom] = useState<number | null>(null) // null = fit-to-screen
   const containerRef = useRef<HTMLDivElement>(null)
+  const scrollerRef = useRef<HTMLDivElement>(null)
   const paperRef = useRef<HTMLDivElement>(null)
   const [paperHeight, setPaperHeight] = useState(1122)
+  const zoomRef = useRef(zoom)
+  zoomRef.current = zoom
 
   const computeFitZoom = useCallback(() => {
     const container = containerRef.current
     if (!container) return 0.5
-    const gap = 32 // 16px top + 16px bottom
+    const gap = 32
     const availH = container.clientHeight - gap
     const availW = container.clientWidth - gap
-    // A4 in px at 96dpi: 210mm ≈ 793.7px, 297mm ≈ 1122.5px
     const paperW = 793.7
     const paper = paperRef.current
     const paperH = paper ? paper.scrollHeight : 1122.5
     return Math.min(availW / paperW, availH / paperH, 1)
   }, [])
 
+  const computeEffectiveZoom = useCallback(() => {
+    const fit = computeFitZoom()
+    const z = zoomRef.current
+    return z === null ? fit : Math.max(z, fit)
+  }, [computeFitZoom])
+
   // On mount and resize, recompute fit zoom if in fit mode
   useEffect(() => {
     if (zoom !== null) return
     const ro = new ResizeObserver(() => {
-      // Force re-render so the fit zoom recalculates
       setZoom(null)
     })
     if (containerRef.current) ro.observe(containerRef.current)
@@ -52,6 +59,84 @@ export function PreviewZoom({ children, style, id, className }: Props) {
     ro.observe(paper)
     return () => ro.disconnect()
   }, [])
+
+  // Pinch-to-zoom on touch devices
+  useEffect(() => {
+    const scroller = scrollerRef.current!
+    const container = containerRef.current!
+    if (!scroller || !container) return
+
+    let startDist = 0
+    let startZoomVal = 0
+    let pinching = false
+    let startMidX = 0
+    let startMidY = 0
+
+    function getDistance(t: TouchList) {
+      const dx = t[0].clientX - t[1].clientX
+      const dy = t[0].clientY - t[1].clientY
+      return Math.sqrt(dx * dx + dy * dy)
+    }
+
+    function getMidpoint(t: TouchList) {
+      return {
+        x: (t[0].clientX + t[1].clientX) / 2,
+        y: (t[0].clientY + t[1].clientY) / 2,
+      }
+    }
+
+    function onTouchStart(e: TouchEvent) {
+      if (e.touches.length === 2) {
+        e.preventDefault()
+        pinching = true
+        startDist = getDistance(e.touches)
+        startZoomVal = computeEffectiveZoom()
+
+        const rect = scroller.getBoundingClientRect()
+        const mid = getMidpoint(e.touches)
+        startMidX = mid.x - rect.left + scroller.scrollLeft
+        startMidY = mid.y - rect.top + scroller.scrollTop
+      }
+    }
+
+    function onTouchMove(e: TouchEvent) {
+      if (e.touches.length === 2 && pinching) {
+        e.preventDefault()
+        const dist = getDistance(e.touches)
+        const scale = dist / startDist
+        const fit = computeFitZoom()
+        const newZoom = Math.min(Math.max(startZoomVal * scale, fit), ZOOM_MAX)
+
+        const ratio = newZoom / startZoomVal
+        const rect = scroller.getBoundingClientRect()
+        const mid = getMidpoint(e.touches)
+
+        // Set zoom first, then defer scroll to after React renders the new size
+        if (newZoom <= fit) setZoom(null)
+        else setZoom(Math.round(newZoom * 100) / 100)
+
+        requestAnimationFrame(() => {
+          scroller.scrollLeft = startMidX * ratio - (mid.x - rect.left)
+          scroller.scrollTop = startMidY * ratio - (mid.y - rect.top)
+        })
+      }
+    }
+
+    function onTouchEnd() {
+      pinching = false
+    }
+
+    scroller.addEventListener('touchstart', onTouchStart, { passive: false })
+    scroller.addEventListener('touchmove', onTouchMove, { passive: false })
+    scroller.addEventListener('touchend', onTouchEnd)
+    scroller.addEventListener('touchcancel', onTouchEnd)
+    return () => {
+      scroller.removeEventListener('touchstart', onTouchStart)
+      scroller.removeEventListener('touchmove', onTouchMove)
+      scroller.removeEventListener('touchend', onTouchEnd)
+      scroller.removeEventListener('touchcancel', onTouchEnd)
+    }
+  }, [computeFitZoom, computeEffectiveZoom])
 
   const fitZoom = computeFitZoom()
   const effectiveZoom = zoom === null ? fitZoom : Math.max(zoom, fitZoom)
@@ -78,6 +163,7 @@ export function PreviewZoom({ children, style, id, className }: Props) {
   return (
     <div className="preview-zoom-container" ref={containerRef}>
       <div
+        ref={scrollerRef}
         className="preview-zoom-scroller"
         style={{ '--preview-zoom': effectiveZoom } as React.CSSProperties}
       >

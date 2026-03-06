@@ -22,7 +22,7 @@
   background: var(--color-bg);
 }
 
-body { min-height: 100vh; }
+body { min-height: 100dvh; overflow: hidden; }
 
 a { color: inherit; }
 
@@ -30,7 +30,7 @@ a { color: inherit; }
 .app {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
 }
 
@@ -2499,8 +2499,12 @@ textarea { resize: vertical; }
     background: rgba(0, 0, 0, 0.3);
   }
 
-  /* No zoom controls on touch devices — scale to fit instead */
+  /* No zoom controls on touch devices — JS pinch-to-zoom + scroll */
   .preview-zoom-controls { display: none; }
+  .preview-zoom-scroller {
+    touch-action: pan-x pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 /* ─── Phone (≤480px) ─────────────────────────────────────────────────────────── */
