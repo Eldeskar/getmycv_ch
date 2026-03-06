@@ -9,20 +9,17 @@ const LANGUAGES = [
 
 export function LanguageSwitcher() {
   const { i18n } = useTranslation()
-  const current = i18n.language.slice(0, 2) // normalise e.g. "de-CH" → "de"
+  const current = i18n.language.slice(0, 2)
 
   return (
-    <div className="lang-switcher">
+    <select
+      className="lang-select"
+      value={current}
+      onChange={(e) => i18n.changeLanguage(e.target.value)}
+    >
       {LANGUAGES.map((lang) => (
-        <button
-          key={lang.code}
-          className={`lang-btn ${current === lang.code ? 'lang-btn--active' : ''}`}
-          onClick={() => i18n.changeLanguage(lang.code)}
-          aria-label={lang.code}
-        >
-          {lang.label}
-        </button>
+        <option key={lang.code} value={lang.code}>{lang.label}</option>
       ))}
-    </div>
+    </select>
   )
 }

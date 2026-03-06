@@ -433,24 +433,22 @@ a { color: inherit; }
 }
 
 /* ─── Language Switcher ─────────────────────────────────────────────────────── */
-.lang-switcher {
-  display: flex;
-  gap: 2px;
-}
-.lang-btn {
-  padding: 0.25rem 0.5rem;
+.lang-select {
+  padding: 0.15rem 0.2rem;
   background: none;
-  border: 1px solid transparent;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 500;
   color: var(--color-muted);
   cursor: pointer;
+  font-family: inherit;
   letter-spacing: 0.03em;
-  transition: all 0.15s;
+  width: 3.2rem;
 }
-.lang-btn:hover { color: var(--color-text); border-color: var(--color-border); }
-.lang-btn--active { color: var(--color-accent); border-color: var(--color-accent); }
+.lang-select:hover {
+  color: var(--color-text);
+}
 
 .storage-banner__icon { font-size: 1rem; padding-top: 1px; }
 
