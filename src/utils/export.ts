@@ -41,18 +41,11 @@ export async function exportPDF(elementId: string, name: string): Promise<void> 
   const element = document.getElementById(elementId)
   if (!element) throw new Error('Preview element not found')
 
-  // Hide placeholders and page-break guidelines during export
+  // .cv-exporting resets min-height, transform, box-shadow, border-radius via CSS
   element.classList.add('cv-exporting')
 
-  const paper = element.querySelector('.preview-paper') as HTMLElement | null
-  const origWidth = paper?.style.width ?? ''
-  const origShadow = paper?.style.boxShadow ?? ''
-  const origRadius = paper?.style.borderRadius ?? ''
-  if (paper) {
-    paper.style.width = '210mm'
-    paper.style.boxShadow = 'none'
-    paper.style.borderRadius = '0'
-  }
+  // Force reflow so html2canvas sees the updated layout
+  void element.offsetHeight
 
   const opt = {
     margin: 0,
@@ -64,6 +57,7 @@ export async function exportPDF(elementId: string, name: string): Promise<void> 
       backgroundColor: '#ffffff',
       width: 794,          // 210mm at 96dpi
       windowWidth: 794,
+      height: element.scrollHeight,
     },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
   }
@@ -72,11 +66,6 @@ export async function exportPDF(elementId: string, name: string): Promise<void> 
     await html2pdf().set(opt).from(element).save()
   } finally {
     element.classList.remove('cv-exporting')
-    if (paper) {
-      paper.style.width = origWidth
-      paper.style.boxShadow = origShadow
-      paper.style.borderRadius = origRadius
-    }
   }
 }
 

@@ -2,7 +2,6 @@ import { useState, useCallback, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 const ZOOM_STEP = 0.1
-const ZOOM_MIN = 0.3
 const ZOOM_MAX = 2.0
 
 interface Props {
