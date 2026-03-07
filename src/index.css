@@ -71,6 +71,7 @@ a { color: inherit; }
   display: flex;
   flex: 1;
   overflow: hidden;
+  position: relative;
 }
 
 .app-sidebar {
@@ -2467,8 +2468,8 @@ textarea { resize: vertical; }
 
   .app-sidebar,
   .options-bar {
-    position: fixed;
-    top: var(--header-height);
+    position: absolute;
+    top: 0;
     bottom: 0;
     z-index: 100;
     max-width: calc(100vw - 48px);
@@ -2492,9 +2493,8 @@ textarea { resize: vertical; }
   }
 
   .panel-overlay {
-    position: fixed;
+    position: absolute;
     inset: 0;
-    top: var(--header-height);
     z-index: 99;
     background: rgba(0, 0, 0, 0.3);
   }

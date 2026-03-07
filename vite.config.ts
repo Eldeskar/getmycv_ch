@@ -15,4 +15,7 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
   },
+  test: {
+    environment: 'node',
+  },
 })
