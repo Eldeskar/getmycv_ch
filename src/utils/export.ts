@@ -220,7 +220,7 @@ function downloadBlob(blob: Blob, filename: string): void {
 }
 
 function sanitizeFilename(name: string): string {
-  return name.replace(/[^a-z0-9_\-]/gi, '_').toLowerCase()
+  return name.replace(/[^a-zA-Z0-9_\-]/g, '_')
 }
 
 /** Build filename as YYYYMMdd_lastname_firstname (or fallback to 'cv'). */
@@ -233,12 +233,19 @@ function cvFilename(name: string): string {
   ].join('')
 
   const trimmed = name.trim()
-  if (!trimmed) return `${date}_cv`
+  if (!trimmed) return `${date}_CV`
 
   const parts = trimmed.split(/\s+/)
-  if (parts.length === 1) return `${date}_${sanitizeFilename(parts[0])}`
+  if (parts.length === 1) return `${date}_CV_${sanitizeFilename(parts[0])}`
 
   const lastName = parts[parts.length - 1]
   const firstName = parts.slice(0, -1).join('_')
-  return `${date}_${sanitizeFilename(lastName)}_${sanitizeFilename(firstName)}`
+  return `${date}_CV_${sanitizeFilename(lastName)}_${sanitizeFilename(firstName)}`
+}
+
+export function printCV(name: string): void {
+  const prev = document.title
+  document.title = cvFilename(name)
+  window.print()
+  document.title = prev
 }

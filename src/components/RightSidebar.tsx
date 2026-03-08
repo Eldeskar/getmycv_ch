@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CV, TemplateId, StyleSettings, CVSectionId, CVLanguage, CV_LANGUAGES } from '../types/cv'
-import { exportJSON, importJSON } from '../utils/export'
+import { exportJSON, importJSON, printCV } from '../utils/export'
 import { TemplatePicker } from './TemplatePicker'
 
 const FONT_OPTIONS = [
@@ -170,7 +170,7 @@ export function OptionsBar({ selectedTemplate, onTemplateChange, styleSettings, 
         <div className="export-buttons">
           <button
             className="btn-upload"
-            onClick={() => window.print()}
+            onClick={() => printCV(cv.personal.name)}
             title={t('export.downloadPDFTitle')}
           >
             {t('export.downloadPDF')}

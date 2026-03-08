@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CV } from '../types/cv'
-import { exportJSON, exportDOCX, importJSON } from '../utils/export'
+import { exportJSON, exportDOCX, importJSON, printCV } from '../utils/export'
 
 interface Props {
   cv: CV
@@ -49,7 +49,7 @@ export function ExportBar({ cv }: Props) {
   return (
     <div className="export-bar">
       <div className="export-bar__group">
-        <button className="export-btn export-btn--pdf" onClick={() => window.print()}>
+        <button className="export-btn export-btn--pdf" onClick={() => printCV(cv.personal.name)}>
           {t('export.downloadPDF')}
         </button>
 
