@@ -135,7 +135,21 @@ export function ExecutiveTemplate({ cv, placeholders: p, sectionOrder, labels, l
         </div>
       ) : null,
 
-    projects: () => null,
+    projects: () =>
+      cv.projects.length > 0 ? (
+        <div className="cv-executive__section">
+          <h2>{labels.portfolio}</h2>
+          {cv.projects.map((proj) => (
+            <div key={proj.id} className="cv-executive__entry">
+              <div className="cv-executive__entry-content">
+                <div className="cv-executive__entry-title"><strong>{proj.name}</strong></div>
+                {proj.description && <p className="cv-executive__desc"><em>{proj.description}</em></p>}
+                {proj.technologies.length > 0 && <p className="cv-executive__desc">{proj.technologies.join(', ')}</p>}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : null,
   }
 
   return (

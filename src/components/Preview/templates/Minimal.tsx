@@ -143,7 +143,22 @@ export function MinimalTemplate({ cv, placeholders: p, sectionOrder, labels, loc
         </div>
       ) : null,
 
-    projects: () => null,
+    projects: () =>
+      cv.projects.length > 0 ? (
+        <div>
+          <div className="cv-minimal__divider" />
+          <h2 className="cv-minimal__section-title">{labels.portfolio}</h2>
+          {cv.projects.map((proj) => (
+            <div key={proj.id} className="cv-minimal__entry">
+              <div className="cv-minimal__entry-body">
+                <div className="cv-minimal__entry-title">{proj.name}</div>
+                {proj.description && <div className="cv-entry__grade"><em>{proj.description}</em></div>}
+                {proj.technologies.length > 0 && <div className="cv-entry__grade">{proj.technologies.join(', ')}</div>}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : null,
   }
 
   return (

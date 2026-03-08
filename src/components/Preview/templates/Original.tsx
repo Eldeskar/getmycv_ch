@@ -109,7 +109,20 @@ export function OriginalTemplate({ cv, placeholders: p, sectionOrder, labels, lo
         ))}
       </div>
     ) : <></>,
-    projects: () => null,
+    projects: () => cv.projects.length > 0 ? (
+      <div className="cv-original__section">
+        <div className="cv-original__section-title">{labels.portfolio}</div>
+        {cv.projects.map((proj) => (
+          <div key={proj.id} className="cv-original__entry">
+            <div className="cv-original__entry-header">
+              <div className="cv-original__entry-title">{proj.name}</div>
+            </div>
+            {proj.description && <p className="cv-original__desc"><em>{proj.description}</em></p>}
+            {proj.technologies.length > 0 && <p className="cv-original__desc">{proj.technologies.join(', ')}</p>}
+          </div>
+        ))}
+      </div>
+    ) : <></>,
     interests: () => interests.length > 0 ? (
       <div className={`cv-original__section${p?.interests ? ' cv-placeholder' : ''}`}>
         <div className="cv-original__section-title">{labels.interests}</div>

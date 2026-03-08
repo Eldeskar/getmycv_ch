@@ -17,7 +17,7 @@ const SECTION_TO_TAB: Record<string, Tab> = {
   skills: 'skills',
   languages: 'skills',
   interests: 'skills',
-  projects: 'skills',
+  projects: 'experience',
 }
 
 interface Props {
@@ -98,8 +98,10 @@ export function Editor({ cv, cvLanguage, onChange }: Props) {
         {activeTab === 'experience' && (
           <ExperienceSection
             data={cv.experience}
+            projects={cv.projects}
             lang={cvLanguage}
             onChange={(experience) => onChange({ ...cv, experience })}
+            onProjectsChange={(projects) => onChange({ ...cv, projects })}
           />
         )}
         {activeTab === 'education' && (

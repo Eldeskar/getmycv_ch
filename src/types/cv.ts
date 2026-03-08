@@ -108,7 +108,7 @@ export interface CV {
   interests: LocalizedStringArray
 }
 
-export type TemplateId = 'classic' | 'modern' | 'minimal' | 'executive' | 'professional' | 'creative' | 'original' | 'sharp' | 'elegant'
+export type TemplateId = 'classic' | 'modern' | 'minimal' | 'executive' | 'professional' | 'creative' | 'original' | 'sharp' | 'elegant' | 'nina'
 
 export type CVSectionId = 'summary' | 'experience' | 'education' | 'skills' | 'languages' | 'certifications' | 'projects' | 'interests'
 

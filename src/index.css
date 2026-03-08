@@ -2444,6 +2444,274 @@ textarea { resize: vertical; }
 .cv-exporting .cv-photo-placeholder { display: none !important; }
 .cv-exporting .cv-template { background-image: none !important; }
 
+/* ─── Template: Nina ─────────────────────────────────────────────────────────── */
+.cv-nina {
+  display: flex;
+  font-family: var(--cv-font, 'Georgia', serif);
+  font-size: 10pt;
+  color: #333;
+  min-height: 297mm;
+}
+.cv-nina__sidebar {
+  width: 35%;
+  background: #1b2838;
+  color: #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+.cv-nina__header {
+  background: var(--cv-accent, #e8a825);
+  padding: 1.8rem 1.2rem 1.4rem;
+  text-align: center;
+}
+.cv-nina__photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  margin: 0 auto 0.7rem;
+  object-fit: cover;
+}
+.cv-nina__header h1 {
+  font-size: 1.4em;
+  color: #fff;
+  margin: 0 0 0.15rem;
+  font-weight: 700;
+}
+.cv-nina__title {
+  font-size: 0.85em;
+  color: rgba(255,255,255,0.9);
+  font-weight: 400;
+}
+
+/* Sidebar contact */
+.cv-nina__contact {
+  padding: 0.8rem 1.2rem;
+}
+.cv-nina__sidebar-section h3 {
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--cv-accent, #e8a825);
+  border-bottom: 2px solid var(--cv-accent, #e8a825);
+  padding-bottom: 0.25rem;
+  margin: 0 0 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.cv-nina__icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+.cv-nina__contact-group {
+  margin-bottom: 0.45rem;
+}
+.cv-nina__contact-label {
+  font-size: 0.72em;
+  color: var(--cv-accent, #e8a825);
+  font-weight: 600;
+  margin-bottom: 0.05rem;
+}
+.cv-nina__contact-value {
+  font-size: 0.75em;
+  line-height: 1.4;
+}
+
+/* Sidebar sections */
+.cv-nina__sidebar-section {
+  padding: 0.6rem 1.2rem;
+}
+
+/* Skills with progress bars */
+.cv-nina__skill-group { margin-bottom: 0.4rem; }
+.cv-nina__skill-cat {
+  font-size: 0.7em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+  margin-bottom: 0.25rem;
+}
+.cv-nina__skill-item {
+  margin-bottom: 0.3rem;
+}
+.cv-nina__skill-name {
+  font-size: 0.75em;
+  display: block;
+  margin-bottom: 0.15rem;
+}
+.cv-nina__skill-bar {
+  display: flex;
+  gap: 3px;
+}
+.cv-nina__skill-seg {
+  flex: 1;
+  height: 5px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.15);
+}
+.cv-nina__skill-seg--filled {
+  background: var(--cv-accent, #e8a825);
+}
+
+/* Languages */
+.cv-nina__lang-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75em;
+  margin-bottom: 0.25rem;
+}
+.cv-nina__lang-level {
+  opacity: 0.7;
+}
+
+/* Interests */
+.cv-nina__interest-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.cv-nina__interest-list li {
+  font-size: 0.75em;
+  margin-bottom: 0.2rem;
+}
+
+/* Certifications in sidebar */
+.cv-nina__cert-item {
+  margin-bottom: 0.4rem;
+  font-size: 0.75em;
+}
+.cv-nina__cert-inst {
+  opacity: 0.7;
+  font-size: 0.9em;
+}
+.cv-nina__cert-date {
+  opacity: 0.5;
+  font-size: 0.85em;
+}
+
+/* ── Main (right column) ── */
+.cv-nina__main {
+  flex: 1;
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.cv-nina__main-section h2 {
+  font-size: 1.05em;
+  font-weight: 700;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.5rem;
+  border-bottom: 2px solid var(--cv-accent, #e8a825);
+  padding-bottom: 0.3rem;
+}
+.cv-nina__main-section h2 .cv-nina__icon {
+  color: var(--cv-accent, #e8a825);
+  width: 18px;
+  height: 18px;
+  background: rgba(232, 168, 37, 0.12);
+  padding: 3px;
+  border-radius: 4px;
+  box-sizing: content-box;
+}
+.cv-nina__summary {
+  font-size: 0.8em;
+  line-height: 1.55;
+  text-align: justify;
+  margin: 0;
+}
+
+/* Experience timeline */
+.cv-nina__timeline {
+  position: relative;
+  padding-left: 1rem;
+}
+.cv-nina__timeline::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  bottom: 6px;
+  width: 1.5px;
+  background: #ccc;
+}
+.cv-nina__timeline-item {
+  position: relative;
+  margin-bottom: 0.7rem;
+}
+.cv-nina__timeline-dot {
+  position: absolute;
+  left: -1rem;
+  top: 5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--cv-accent, #e8a825);
+  transform: translateX(-0.5px);
+}
+.cv-nina__timeline-content {
+  padding-left: 0.2rem;
+}
+.cv-nina__exp-role {
+  font-weight: 700;
+  font-size: 0.85em;
+}
+.cv-nina__exp-meta {
+  font-size: 0.75em;
+  color: #666;
+}
+.cv-nina__exp-date {
+  font-size: 0.7em;
+  color: #999;
+  margin-bottom: 0.2rem;
+}
+.cv-nina__exp-desc {
+  font-size: 0.75em;
+  line-height: 1.5;
+  margin: 0.2rem 0 0;
+  text-align: justify;
+}
+
+/* Education */
+.cv-nina__edu-item {
+  margin-bottom: 0.6rem;
+}
+.cv-nina__edu-degree {
+  font-weight: 700;
+  font-size: 0.88em;
+}
+.cv-nina__edu-inst {
+  font-size: 0.75em;
+  color: #666;
+  margin-top: 0.1rem;
+}
+.cv-nina__edu-grade {
+  font-size: 0.72em;
+  color: #888;
+  margin-top: 0.1rem;
+}
+
+/* Portfolio / Projects */
+.cv-nina__project-item {
+  margin-bottom: 0.6rem;
+  font-size: 0.8em;
+  line-height: 1.5;
+  text-align: justify;
+}
+.cv-nina__project-name {
+  font-weight: 700;
+}
+.cv-nina__project-desc {
+  color: #555;
+  font-style: italic;
+}
+
 /* ─── Tablet (≤1024px) ───────────────────────────────────────────────────────── */
 /* Toggle buttons hidden on desktop, visible on tablet */
 .panel-toggle { display: none; }
@@ -2528,39 +2796,62 @@ textarea { resize: vertical; }
   .cv-placeholder { display: none !important; }
   .cv-photo-placeholder { display: none !important; }
   .cv-template { background-image: none !important; }
+
+  /* Hide everything except the preview */
   .app-header,
   .app-footer,
   .app-sidebar,
   .options-bar,
   .storage-banner,
   .template-picker,
-  .export-bar { display: none !important; }
-
-  .app {
-    height: auto;
-    overflow: visible;
-  }
-  .app-body {
-    display: block;
-    overflow: visible;
-  }
-  .app-main {
-    padding: 0;
-    overflow: visible;
-  }
-
-  .preview-zoom-container { overflow: visible; }
-  .preview-zoom-scroller { overflow: visible; padding: 0; }
-  .preview-zoom-sizer { overflow: visible; width: auto !important; height: auto !important; }
-  .preview-zoom-sizer > .preview-paper { transform: none !important; width: 100%; }
+  .export-bar,
+  .panel-overlay,
   .preview-zoom-controls { display: none !important; }
 
+  /* Reset all layout containers so the CV fills the page */
+  .app,
+  .app-body,
+  .app-main,
+  .preview-zoom-container,
+  .preview-zoom-scroller,
+  .preview-zoom-sizer {
+    display: block !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    position: static !important;
+    transform: none !important;
+    border: none !important;
+  }
+
+  .preview-zoom-sizer > .preview-paper {
+    transform: none !important;
+    transform-origin: unset !important;
+  }
+
   .preview-paper {
-    box-shadow: none;
-    width: 100%;
-    margin: 0;
-    overflow: visible;
-    border-radius: 0;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    width: 210mm !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  .cv-template {
+    width: 100% !important;
+    min-height: 297mm !important;
+  }
+
+  /* Preserve backgrounds, colors, and fonts in print */
+  .preview-paper,
+  .preview-paper * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
   @page { margin: 0; size: A4; }

@@ -118,7 +118,21 @@ export function ProfessionalTemplate({ cv, placeholders: p, sectionOrder, labels
         </div>
       ) : null,
 
-    projects: () => null,
+    projects: () =>
+      cv.projects.length > 0 ? (
+        <div className="cv-prof__section">
+          <h2>{labels.portfolio}</h2>
+          {cv.projects.map((proj) => (
+            <div key={proj.id} className="cv-entry">
+              <div className="cv-entry__header">
+                <div><strong>{proj.name}</strong></div>
+              </div>
+              {proj.description && <p className="cv-entry__grade"><em>{proj.description}</em></p>}
+              {proj.technologies.length > 0 && <p className="cv-entry__grade">{proj.technologies.join(', ')}</p>}
+            </div>
+          ))}
+        </div>
+      ) : null,
   }
 
   return (

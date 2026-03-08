@@ -1,13 +1,15 @@
 import { useTranslation } from 'react-i18next'
-import { ExperienceEntry, CVLanguage } from '../../types/cv'
+import { ExperienceEntry, ProjectEntry, CVLanguage } from '../../types/cv'
 import { ls, setLs, lsa, setLsa } from '../../utils/resolveCV'
 import { nanoid } from '../../utils/nanoid'
 import { useDragReorder } from '../../hooks/useDragReorder'
 
 interface Props {
   data: ExperienceEntry[]
+  projects: ProjectEntry[]
   lang: CVLanguage
   onChange: (data: ExperienceEntry[]) => void
+  onProjectsChange: (projects: ProjectEntry[]) => void
 }
 
 function emptyEntry(): ExperienceEntry {
@@ -23,9 +25,10 @@ function emptyEntry(): ExperienceEntry {
   }
 }
 
-export function ExperienceSection({ data, lang, onChange }: Props) {
+export function ExperienceSection({ data, projects, lang, onChange, onProjectsChange }: Props) {
   const { t } = useTranslation()
   const { dragHandlers, handleProps } = useDragReorder(data, onChange)
+  const { dragHandlers: projectDragHandlers, handleProps: projectHandleProps } = useDragReorder(projects, onProjectsChange)
 
   function update(id: string, patch: Partial<ExperienceEntry>) {
     onChange(data.map((e) => (e.id === id ? { ...e, ...patch } : e)))
@@ -165,6 +168,66 @@ export function ExperienceSection({ data, lang, onChange }: Props) {
 
       <button className="btn-add-entry" onClick={addEntry}>
         {t('editor.experience.addEntry')}
+      </button>
+
+      <h3 className="editor-section__title" style={{ marginTop: '2rem' }}>
+        {t('editor.skills.projectsTitle')}
+      </h3>
+
+      {projects.map((proj, i) => (
+        <div key={proj.id} className="editor-card editor-card--compact" {...projectDragHandlers(i)}>
+          <div className="editor-card__header">
+            <span className="drag-handle" title="Drag to reorder" {...projectHandleProps()}>⠿</span>
+            <span className="editor-card__index">{proj.name || t('editor.skills.projectName')}</span>
+            <button className="btn-icon btn-danger" onClick={() => onProjectsChange(projects.filter((p) => p.id !== proj.id))}>
+              {t('editor.experience.remove')}
+            </button>
+          </div>
+          <div className="field">
+            <label>{t('editor.skills.projectName')}</label>
+            <input
+              type="text"
+              placeholder={t('editor.skills.projectNamePlaceholder')}
+              value={proj.name}
+              onChange={(e) => onProjectsChange(projects.map((p) => p.id === proj.id ? { ...p, name: e.target.value } : p))}
+            />
+          </div>
+          <div className="field">
+            <label>{t('editor.skills.projectDescription')}</label>
+            <input
+              type="text"
+              placeholder={t('editor.skills.projectDescriptionPlaceholder')}
+              value={proj.description}
+              onChange={(e) => onProjectsChange(projects.map((p) => p.id === proj.id ? { ...p, description: e.target.value } : p))}
+            />
+          </div>
+          <div className="field">
+            <label>{t('editor.skills.projectUrl')}</label>
+            <input
+              type="text"
+              placeholder={t('editor.skills.projectUrlPlaceholder')}
+              value={proj.url}
+              onChange={(e) => onProjectsChange(projects.map((p) => p.id === proj.id ? { ...p, url: e.target.value } : p))}
+            />
+          </div>
+          <div className="field">
+            <label>
+              {t('editor.skills.projectTechnologies')}{' '}
+              <span className="field__hint">{t('editor.skills.projectTechnologiesHint')}</span>
+            </label>
+            <input
+              type="text"
+              placeholder={t('editor.skills.projectTechnologiesPlaceholder')}
+              value={proj.technologies.join(', ')}
+              onChange={(e) => onProjectsChange(projects.map((p) => p.id === proj.id ? { ...p, technologies: e.target.value.split(',').map((s) => s.trim()) } : p))}
+              onBlur={() => onProjectsChange(projects.map((p) => p.id === proj.id ? { ...p, technologies: proj.technologies.filter(Boolean) } : p))}
+            />
+          </div>
+        </div>
+      ))}
+
+      <button className="btn-add-entry" onClick={() => onProjectsChange([...projects, { id: nanoid(), name: '', description: '', url: '', technologies: [] }])}>
+        {t('editor.skills.addProject')}
       </button>
     </section>
   )

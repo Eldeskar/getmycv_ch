@@ -118,6 +118,20 @@ export function ClassicTemplate({ cv, placeholders: p, sectionOrder, labels, loc
         <div className="cv-classic__skill-row">{interests.join(', ')}</div>
       </div>
     ) : <></>,
+    projects: () => cv.projects.length > 0 ? (
+      <div className="cv-classic__section">
+        <h2>{labels.portfolio}</h2>
+        {cv.projects.map((proj) => (
+          <div key={proj.id} className="cv-entry">
+            <div className="cv-entry__header">
+              <div><strong>{proj.name}</strong></div>
+            </div>
+            {proj.description && <p className="cv-entry__grade"><em>{proj.description}</em></p>}
+            {proj.technologies.length > 0 && <p className="cv-entry__grade">{proj.technologies.join(', ')}</p>}
+          </div>
+        ))}
+      </div>
+    ) : <></>,
   }
 
   return (

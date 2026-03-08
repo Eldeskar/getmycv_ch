@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { CV, TemplateId, DEFAULT_STYLE } from '../types/cv'
 import { Preview } from './Preview'
 
-const TEMPLATE_IDS: TemplateId[] = ['modern', 'classic', 'minimal', 'executive', 'professional', 'creative', 'original', 'sharp', 'elegant']
+const TEMPLATE_IDS: TemplateId[] = ['modern', 'classic', 'minimal', 'executive', 'professional', 'creative', 'original', 'sharp', 'elegant', 'nina']
 const A4_WIDTH = 794 // 210mm at 96dpi
 
 interface Props {

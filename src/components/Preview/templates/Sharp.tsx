@@ -112,7 +112,19 @@ export function SharpTemplate({ cv, placeholders: p, sectionOrder, labels, local
         </div>
       ) : null,
 
-    projects: () => null,
+    projects: () =>
+      cv.projects.length > 0 ? (
+        <div className="cv-sharp__section">
+          <h2 className="cv-sharp__section-title">{labels.portfolio}</h2>
+          {cv.projects.map((proj) => (
+            <div key={proj.id} className="cv-sharp__entry">
+              <strong className="cv-sharp__entry-role">{proj.name}</strong>
+              {proj.description && <p className="cv-sharp__text"><em>{proj.description}</em></p>}
+              {proj.technologies.length > 0 && <p className="cv-sharp__text">{proj.technologies.join(', ')}</p>}
+            </div>
+          ))}
+        </div>
+      ) : null,
   }
 
   return (

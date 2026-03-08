@@ -169,7 +169,19 @@ export function ElegantTemplate({ cv, placeholders: p, sectionOrder, labels, loc
         </div>
       ) : null,
 
-    projects: () => null,
+    projects: () =>
+      cv.projects.length > 0 ? (
+        <div className="cv-elegant__main-section" data-cv-section="projects">
+          <h2 className="cv-elegant__main-title">{labels.portfolio}</h2>
+          {cv.projects.map((proj) => (
+            <div key={proj.id} className="cv-elegant__entry">
+              <strong className="cv-elegant__entry-role">{proj.name}</strong>
+              {proj.description && <p className="cv-elegant__text"><em>{proj.description}</em></p>}
+              {proj.technologies.length > 0 && <p className="cv-elegant__text">{proj.technologies.join(', ')}</p>}
+            </div>
+          ))}
+        </div>
+      ) : null,
     languages: () => null, // shown in sidebar
     interests: () => null, // shown in sidebar
   }

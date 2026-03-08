@@ -11,6 +11,7 @@ import { CreativeTemplate } from './templates/Creative'
 import { OriginalTemplate } from './templates/Original'
 import { SharpTemplate } from './templates/Sharp'
 import { ElegantTemplate } from './templates/Elegant'
+import { NinaTemplate } from './templates/Nina'
 
 interface Props {
   cv: CV
@@ -36,6 +37,7 @@ export function Preview({ cv, template, sectionOrder, cvLanguage }: Props) {
       {template === 'original' && <OriginalTemplate cv={displayCV} placeholders={placeholders} sectionOrder={sectionOrder} labels={labels} locale={cvLanguage} />}
       {template === 'sharp' && <SharpTemplate cv={displayCV} placeholders={placeholders} sectionOrder={sectionOrder} labels={labels} locale={cvLanguage} />}
       {template === 'elegant' && <ElegantTemplate cv={displayCV} placeholders={placeholders} sectionOrder={sectionOrder} labels={labels} locale={cvLanguage} />}
+      {template === 'nina' && <NinaTemplate cv={displayCV} placeholders={placeholders} sectionOrder={sectionOrder} labels={labels} locale={cvLanguage} />}
     </>
   )
 }

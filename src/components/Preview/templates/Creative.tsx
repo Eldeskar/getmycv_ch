@@ -136,7 +136,20 @@ export function CreativeTemplate({ cv, placeholders: p, sectionOrder, labels, lo
       </div>
     ) : null,
 
-    projects: () => null,
+    projects: () => cv.projects.length > 0 ? (
+      <div className="cv-creative__section">
+        <h2>{labels.portfolio}</h2>
+        <div className="cv-creative__certs">
+          {cv.projects.map((proj) => (
+            <div key={proj.id} className="cv-creative__cert-item">
+              <strong>{proj.name}</strong>
+              {proj.description && <p><em>{proj.description}</em></p>}
+              {proj.technologies.length > 0 && <p>{proj.technologies.join(', ')}</p>}
+            </div>
+          ))}
+        </div>
+      </div>
+    ) : null,
   }
 
   return (
