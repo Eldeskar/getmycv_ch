@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CV, TemplateId, StyleSettings, CVSectionId, CVLanguage, CV_LANGUAGES } from '../types/cv'
-import { exportPDF, exportJSON, importJSON } from '../utils/export'
+import { exportJSON, importJSON } from '../utils/export'
 import { TemplatePicker } from './TemplatePicker'
 
 const FONT_OPTIONS = [
@@ -19,7 +19,7 @@ const ACCENT_COLORS = [
 
 // Two-column templates only allow reordering main-column sections
 const SIDEBAR_SECTIONS: CVSectionId[] = ['skills', 'languages', 'interests']
-const TWO_COLUMN_TEMPLATES: TemplateId[] = ['modern', 'professional', 'creative', 'sharp', 'elegant']
+const TWO_COLUMN_TEMPLATES: TemplateId[] = ['modern', 'professional', 'creative', 'sharp', 'elegant', 'nina']
 
 interface Props {
   selectedTemplate: TemplateId
@@ -29,13 +29,11 @@ interface Props {
   cv: CV
   cvLanguage: CVLanguage
   onCVLanguageChange: (lang: CVLanguage) => void
-  previewId: string
   className?: string
 }
 
-export function OptionsBar({ selectedTemplate, onTemplateChange, styleSettings, onStyleChange, cv, cvLanguage, onCVLanguageChange, previewId, className }: Props) {
+export function OptionsBar({ selectedTemplate, onTemplateChange, styleSettings, onStyleChange, cv, cvLanguage, onCVLanguageChange, className }: Props) {
   const { t } = useTranslation()
-  const [exporting, setExporting] = useState(false)
   const [showPicker, setShowPicker] = useState(false)
   const importRef = useRef<HTMLInputElement>(null)
 
@@ -172,14 +170,10 @@ export function OptionsBar({ selectedTemplate, onTemplateChange, styleSettings, 
         <div className="export-buttons">
           <button
             className="btn-upload"
-            disabled={exporting}
-            onClick={async () => {
-              setExporting(true)
-              try { await exportPDF(previewId, cv.personal.name) } finally { setExporting(false) }
-            }}
+            onClick={() => window.print()}
             title={t('export.downloadPDFTitle')}
           >
-            {exporting ? '...' : t('export.downloadPDF')}
+            {t('export.downloadPDF')}
           </button>
           <button
             className="btn-upload"

@@ -35,41 +35,6 @@ export function importJSON(file: File): Promise<CV> {
   })
 }
 
-// ─── PDF ─────────────────────────────────────────────────────────────────────
-
-export async function exportPDF(elementId: string, name: string): Promise<void> {
-  // Dynamically import html2pdf to avoid SSR issues
-  const html2pdf = (await import('html2pdf.js')).default
-  const element = document.getElementById(elementId)
-  if (!element) throw new Error('Preview element not found')
-
-  // .cv-exporting resets min-height, transform, box-shadow, border-radius via CSS
-  element.classList.add('cv-exporting')
-
-  // Force reflow so html2canvas sees the updated layout
-  void element.offsetHeight
-
-  const opt = {
-    margin: 0,
-    filename: `${cvFilename(name)}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: '#ffffff',
-      width: 794,          // 210mm at 96dpi
-      windowWidth: 794,
-      height: element.scrollHeight,
-    },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-  }
-
-  try {
-    await html2pdf().set(opt).from(element).save()
-  } finally {
-    element.classList.remove('cv-exporting')
-  }
-}
 
 // ─── DOCX ────────────────────────────────────────────────────────────────────
 

@@ -1,6 +1,6 @@
 {
   "name": "getmycv-ch",
-  "version": "0.2.9",
+  "version": "0.3.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "docx": "^9.0.2",
-    "html2pdf.js": "^0.10.2",
     "i18next": "^23.16.8",
     "i18next-browser-languagedetector": "^8.2.1",
     "libphonenumber-js": "^1.12.38",

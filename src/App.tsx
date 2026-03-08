@@ -93,7 +93,6 @@ export default function App() {
           cv={cv}
           cvLanguage={cvLanguage}
           onCVLanguageChange={switchCVLanguage}
-          previewId="cv-preview-root"
         />
       </div>
 

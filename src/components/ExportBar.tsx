@@ -1,33 +1,20 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CV } from '../types/cv'
-import { exportJSON, exportPDF, exportDOCX, importJSON } from '../utils/export'
+import { exportJSON, exportDOCX, importJSON } from '../utils/export'
 
 interface Props {
   cv: CV
-  previewId: string
 }
 
-export function ExportBar({ cv, previewId }: Props) {
+export function ExportBar({ cv }: Props) {
   const { t } = useTranslation()
-  const [pdfLoading, setPdfLoading] = useState(false)
   const [docxLoading, setDocxLoading] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
 
   function showToast(msg: string) {
     setToast(msg)
     setTimeout(() => setToast(null), 3000)
-  }
-
-  async function handlePDF() {
-    setPdfLoading(true)
-    try {
-      await exportPDF(previewId, cv.personal.name)
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setPdfLoading(false)
-    }
   }
 
   async function handleDOCX() {
@@ -46,10 +33,6 @@ export function ExportBar({ cv, previewId }: Props) {
     showToast(t('export.backupSaved'))
   }
 
-  function handlePrint() {
-    window.print()
-  }
-
   async function handleImport(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
@@ -66,20 +49,8 @@ export function ExportBar({ cv, previewId }: Props) {
   return (
     <div className="export-bar">
       <div className="export-bar__group">
-        <button className="export-btn export-btn--print" onClick={handlePrint}>
-          <span>🖨</span> {t('export.print')}
-        </button>
-        <span className="export-bar__hint">{t('export.printHint')}</span>
-      </div>
-
-      <div className="export-bar__group">
-        <button
-          className="export-btn export-btn--pdf"
-          onClick={handlePDF}
-          disabled={pdfLoading}
-          title={t('export.downloadPDFTitle')}
-        >
-          {pdfLoading ? t('export.generating') : t('export.downloadPDF')}
+        <button className="export-btn export-btn--pdf" onClick={() => window.print()}>
+          {t('export.downloadPDF')}
         </button>
 
         <button
