@@ -97,6 +97,15 @@ export interface CertificationEntry {
   description: LocalizedString
 }
 
+export interface ReferenceEntry {
+  id: string
+  name: string
+  company: string
+  position: string
+  phone: string
+  email: string
+}
+
 export interface CV {
   personal: PersonalInfo
   experience: ExperienceEntry[]
@@ -106,15 +115,17 @@ export interface CV {
   projects: ProjectEntry[]
   certifications: CertificationEntry[]
   interests: LocalizedStringArray
+  references: ReferenceEntry[]
 }
 
-export type TemplateId = 'classic' | 'modern' | 'minimal' | 'executive' | 'professional' | 'creative' | 'original' | 'sharp' | 'elegant' | 'nina'
+export type TemplateId = 'classic' | 'modern' | 'minimal' | 'executive' | 'professional' | 'creative' | 'original' | 'sharp' | 'elegant' | 'nina' | 'morgan'
 
-export type CVSectionId = 'summary' | 'experience' | 'education' | 'skills' | 'languages' | 'certifications' | 'projects' | 'interests'
+export type CVSectionId = 'summary' | 'experience' | 'education' | 'skills' | 'languages' | 'certifications' | 'projects' | 'interests' | 'references'
 
 export interface StyleSettings {
   fontFamily: string
   accentColor: string
+  accentColor2: string
   fontSize: number
   sectionOrder: CVSectionId[]
   spacedLayout: boolean
@@ -123,8 +134,9 @@ export interface StyleSettings {
 export const DEFAULT_STYLE: StyleSettings = {
   fontFamily: 'system-ui, -apple-system, sans-serif',
   accentColor: '#1e2a3a',
+  accentColor2: '#e8a825',
   fontSize: 100,
-  sectionOrder: ['summary', 'experience', 'education', 'skills', 'languages', 'certifications', 'projects', 'interests'],
+  sectionOrder: ['summary', 'experience', 'education', 'skills', 'languages', 'certifications', 'projects', 'interests', 'references'],
   spacedLayout: false,
 }
 
@@ -166,4 +178,5 @@ export const EMPTY_CV: CV = {
   projects: [],
   certifications: [],
   interests: {},
+  references: [],
 }

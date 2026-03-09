@@ -1,6 +1,14 @@
-import { CV, CVLanguage } from '../types/cv'
+import { CV, CVLanguage, StyleSettings, TemplateId, DEFAULT_STYLE } from '../types/cv'
 import { resolveCV, ResolvedCV } from './resolveCV'
 import { migrateCV } from './storage'
+
+/** Shape of the exported JSON backup (superset of plain CV for backward compat). */
+export interface CVBackup {
+  cv: CV
+  selectedTemplate?: TemplateId
+  styleSettings?: StyleSettings
+  cvLanguage?: CVLanguage
+}
 import {
   Document,
   Packer,
@@ -12,20 +20,29 @@ import {
 
 // ─── JSON ────────────────────────────────────────────────────────────────────
 
-export function exportJSON(cv: CV): void {
-  const blob = new Blob([JSON.stringify(cv, null, 2)], {
+export function exportJSON(backup: CVBackup): void {
+  const blob = new Blob([JSON.stringify(backup, null, 2)], {
     type: 'application/json',
   })
-  downloadBlob(blob, `${cvFilename(cv.personal.name)}.json`)
+  downloadBlob(blob, `${cvFilename(backup.cv.personal.name)}.json`)
 }
 
-export function importJSON(file: File): Promise<CV> {
+export function importJSON(file: File): Promise<CVBackup> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = (e) => {
       try {
         const raw = JSON.parse(e.target?.result as string)
-        resolve(migrateCV(raw))
+        // Support old format (plain CV without wrapper) and new format (CVBackup)
+        const hasWrapper = raw.cv && typeof raw.cv === 'object' && raw.cv.personal
+        const cv = migrateCV(hasWrapper ? raw.cv : raw)
+        const backup: CVBackup = { cv }
+        if (hasWrapper) {
+          if (raw.selectedTemplate) backup.selectedTemplate = raw.selectedTemplate
+          if (raw.styleSettings) backup.styleSettings = { ...DEFAULT_STYLE, ...raw.styleSettings }
+          if (raw.cvLanguage) backup.cvLanguage = raw.cvLanguage
+        }
+        resolve(backup)
       } catch {
         reject(new Error('Invalid JSON file'))
       }

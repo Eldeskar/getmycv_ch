@@ -353,6 +353,31 @@ a { color: inherit; }
   border: none;
   padding: 0;
 }
+.color-schemes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.color-scheme {
+  display: flex;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+}
+.color-scheme:hover {
+  border-color: var(--color-border);
+}
+.color-scheme--active {
+  border-color: var(--color-text);
+  box-shadow: 0 0 0 2px var(--color-bg);
+}
+.color-scheme__swatch {
+  width: 18px;
+  height: 24px;
+}
 
 /* Font size range */
 .controls-range {
@@ -1199,6 +1224,7 @@ textarea { resize: vertical; }
 .tpl-picker__paper {
   --cv-font: system-ui, -apple-system, sans-serif;
   --cv-accent: #1e2a3a;
+  --cv-accent2: #e8a825;
   --cv-accent-light: color-mix(in srgb, var(--cv-accent) 60%, #93c5fd);
   --cv-accent-lighter: color-mix(in srgb, var(--cv-accent) 15%, #f0f4f8);
   --cv-accent-subtle: color-mix(in srgb, var(--cv-accent) 40%, #7ea8d0);
@@ -2391,6 +2417,264 @@ textarea { resize: vertical; }
   color: var(--color-accent);
 }
 
+/* ─── Morgan Template ─────────────────────────────────────────────────────── */
+.cv-morgan,
+.cv-morgan * {
+  font-family: var(--cv-font);
+}
+.cv-morgan {
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  font-size: 7.8pt;
+}
+
+/* Header bar */
+.cv-morgan__header {
+  display: flex;
+  align-items: stretch;
+  min-height: 110px;
+  margin-top: 58px;
+  margin-bottom: 1rem;
+}
+.cv-morgan__header-left {
+  background: var(--cv-accent, #1e2a3a);
+  color: #fff;
+  flex: 0 0 55%;
+  padding: 1.8rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.cv-morgan__header-left h1 {
+  font-size: 2.44em;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0;
+  line-height: 1.2;
+}
+.cv-morgan__subtitle {
+  font-size: 1.03em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  margin-top: 0.4rem;
+  font-weight: 300;
+}
+.cv-morgan__header-right {
+  flex: 1;
+  padding: 1.2rem 3.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.7rem;
+  font-size: 1em;
+}
+.cv-morgan__contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.cv-morgan__contact-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1.5px solid var(--cv-accent, #1e2a3a);
+  color: var(--cv-accent, #1e2a3a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.cv-morgan__contact-icon .cv-morgan__icon {
+  width: 14px;
+  height: 14px;
+}
+.cv-morgan__icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* Body section rows */
+.cv-morgan__body {
+  padding: 0 2rem;
+  flex: 1;
+}
+.cv-morgan__row {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 2rem;
+  border-top: 1.5px solid #ccc;
+}
+.cv-morgan__row-label {
+  flex: 0 0 130px;
+  font-size: 1.73em;
+  font-weight: 700;
+  color: #222;
+  padding-top: 0.1rem;
+}
+.cv-morgan__row-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Summary */
+.cv-morgan__summary {
+  font-size: 1.05em;
+  line-height: 1.65;
+  text-align: justify;
+  margin: 0;
+}
+
+/* Experience entries */
+.cv-morgan__entry {
+  margin-bottom: 1rem;
+}
+.cv-morgan__entry:last-child {
+  margin-bottom: 0;
+}
+.cv-morgan__entry-header {
+  display: flex;
+  gap: 0.3rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.cv-morgan__entry-company {
+  font-weight: 700;
+  font-size: 1.13em;
+}
+.cv-morgan__entry-date {
+  font-size: 1.13em;
+  font-weight: 400;
+  color: #333;
+}
+.cv-morgan__entry-role {
+  font-size: 1.03em;
+  color: #555;
+  margin-top: 0.05rem;
+}
+.cv-morgan__entry-desc {
+  font-size: 1em;
+  line-height: 1.6;
+  text-align: justify;
+  margin: 0.3rem 0 0;
+  color: #444;
+}
+
+/* Education entries */
+.cv-morgan__edu-entry {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 0.8rem;
+}
+.cv-morgan__edu-entry:last-child {
+  margin-bottom: 0;
+}
+.cv-morgan__edu-left {
+  flex: 0 0 140px;
+}
+.cv-morgan__edu-right {
+  flex: 1;
+  font-size: 1em;
+  line-height: 1.6;
+  text-align: justify;
+  color: #444;
+}
+.cv-morgan__edu-year {
+  font-weight: 700;
+  font-size: 1.09em;
+}
+.cv-morgan__edu-inst {
+  font-size: 1em;
+  color: #555;
+}
+.cv-morgan__edu-degree {
+  font-weight: 700;
+  font-size: 1.03em;
+  color: #333;
+}
+
+/* Footer bar */
+.cv-morgan__footer {
+  display: flex;
+  margin: 0 2rem;
+  padding: 1rem 2rem;
+  border-top: 1.5px solid #ccc;
+  gap: 4rem;
+}
+.cv-morgan__footer-col {
+  flex: 1;
+  padding: 0;
+}
+.cv-morgan__footer-title {
+  font-size: 1.73em;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 0.6rem;
+}
+.cv-morgan__footer-body {
+  font-size: 1.03em;
+}
+
+/* Language bars */
+.cv-morgan__lang-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.45rem;
+}
+.cv-morgan__lang-name {
+  flex: 0 0 65px;
+  font-size: 1.15em;
+}
+.cv-morgan__lang-bar {
+  flex: 1;
+  height: 4px;
+  background: #e5e7eb;
+}
+.cv-morgan__lang-fill {
+  height: 100%;
+  background: #333;
+}
+
+/* Skill/interest list */
+.cv-morgan__skill-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  list-style: disc;
+}
+.cv-morgan__skill-list li {
+  margin-bottom: 0.3rem;
+  font-size: 1.22em;
+  line-height: 1.4;
+}
+.cv-morgan__ref-item {
+  margin-bottom: 0.8rem;
+}
+.cv-morgan__ref-item:last-child {
+  margin-bottom: 0;
+}
+.cv-morgan__ref-name {
+  font-weight: 700;
+  font-size: 1.22em;
+}
+.cv-morgan__ref-role {
+  font-size: 1.09em;
+  color: #555;
+}
+.cv-morgan__ref-label {
+  font-weight: 700;
+  font-size: 1.09em;
+  margin-top: 0.3rem;
+}
+.cv-morgan__ref-contact {
+  font-size: 1.09em;
+  color: #555;
+}
+
 /* ─── Spaced Layout ────────────────────────────────────────────────────────── */
 /* Single-column templates: make the template itself a flex column */
 .cv-spaced .cv-classic,
@@ -2402,13 +2686,17 @@ textarea { resize: vertical; }
   justify-content: space-between;
   min-height: 297mm;
 }
+.cv-spaced .cv-morgan {
+  min-height: 297mm;
+}
 
 /* Two-column templates: make the main column a flex column */
 .cv-spaced .cv-modern__main,
 .cv-spaced .cv-prof__main,
 .cv-spaced .cv-creative__main,
 .cv-spaced .cv-sharp__main,
-.cv-spaced .cv-elegant__main {
+.cv-spaced .cv-elegant__main,
+.cv-spaced .cv-nina__main {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -2420,10 +2708,22 @@ textarea { resize: vertical; }
 .cv-spaced .cv-prof__sidebar,
 .cv-spaced .cv-creative__sidebar,
 .cv-spaced .cv-sharp__sidebar,
-.cv-spaced .cv-elegant__sidebar {
+.cv-spaced .cv-elegant__sidebar,
+.cv-spaced .cv-nina__sidebar {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+/* Morgan spaced: header stays fixed, body rows spread evenly below */
+.cv-spaced .cv-morgan {
+  padding-bottom: 58px;
+}
+.cv-spaced .cv-morgan__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-evenly;
 }
 
 /* The elegant body needs min-height so the columns can stretch */
@@ -2454,28 +2754,36 @@ textarea { resize: vertical; }
 }
 .cv-nina__sidebar {
   width: 35%;
-  background: #1b2838;
+  background: var(--cv-accent, #1e2a3a);
   color: #e0e0e0;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
 }
 .cv-nina__header {
-  background: var(--cv-accent, #e8a825);
+  background: linear-gradient(
+    to bottom,
+    var(--cv-accent2, #e8a825) 0%,
+    var(--cv-accent2, #e8a825) 50%,
+    var(--cv-accent, #1e2a3a) 50%,
+    var(--cv-accent, #1e2a3a) 100%
+  );
   padding: 1.8rem 1.2rem 1.4rem;
   text-align: center;
 }
 .cv-nina__photo {
-  width: 120px;
-  height: 120px;
+  width: 66%;
+  aspect-ratio: 1;
+  height: auto;
   border-radius: 50%;
-  border: 4px solid #fff;
+  border: 4px solid var(--cv-accent2, #e8a825);
   margin: 0 auto 0.7rem;
   object-fit: cover;
+  background: var(--cv-accent2, #e8a825);
 }
 .cv-nina__header h1 {
   font-size: 1.4em;
-  color: #fff;
+  color: var(--cv-accent2, #e8a825);
   margin: 0 0 0.15rem;
   font-weight: 700;
 }
@@ -2493,25 +2801,48 @@ textarea { resize: vertical; }
   font-size: 0.85em;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--cv-accent, #e8a825);
-  border-bottom: 2px solid var(--cv-accent, #e8a825);
-  padding-bottom: 0.25rem;
+  color: var(--cv-accent2, #e8a825);
+  border: none;
+  background-image: linear-gradient(
+    to right,
+    var(--cv-accent2, #e8a825) 0px,
+    var(--cv-accent2, #e8a825) 35px,
+    rgba(255,255,255,0.35) 35px,
+    rgba(255,255,255,0.35) 100%
+  );
+  background-size: calc(100% - 29px) 2.5px;
+  background-position: bottom right;
+  background-repeat: no-repeat;
+  padding-bottom: 0;
   margin: 0 0 0.6rem;
   display: flex;
-  align-items: center;
-  gap: 0.3rem;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+.cv-nina__sidebar-section h3 > span {
+  padding-bottom: 0.3rem;
 }
 .cv-nina__icon {
   width: 14px;
   height: 14px;
   flex-shrink: 0;
 }
+.cv-nina__sidebar-section h3 .cv-nina__icon {
+  color: var(--cv-accent, #1e2a3a);
+  width: 16px;
+  height: 16px;
+  background: var(--cv-accent2, #e8a825);
+  padding: 4px;
+  border-radius: 50%;
+  box-sizing: content-box;
+  align-self: flex-end;
+}
 .cv-nina__contact-group {
   margin-bottom: 0.45rem;
 }
 .cv-nina__contact-label {
   font-size: 0.72em;
-  color: var(--cv-accent, #e8a825);
+  color: var(--cv-accent2, #e8a825);
   font-weight: 600;
   margin-bottom: 0.05rem;
 }
@@ -2553,7 +2884,7 @@ textarea { resize: vertical; }
   background: rgba(255,255,255,0.15);
 }
 .cv-nina__skill-seg--filled {
-  background: var(--cv-accent, #e8a825);
+  background: var(--cv-accent2, #e8a825);
 }
 
 /* Languages */
@@ -2605,19 +2936,33 @@ textarea { resize: vertical; }
   font-weight: 700;
   color: #333;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.4rem;
   margin: 0 0 0.5rem;
-  border-bottom: 2px solid var(--cv-accent, #e8a825);
+  padding-bottom: 0;
+  border: none;
+  background-image: linear-gradient(
+    to right,
+    var(--cv-accent2, #e8a825) 0%,
+    var(--cv-accent2, #e8a825) 10%,
+    #c0c8d0 10%,
+    #c0c8d0 100%
+  );
+  background-size: calc(100% - 34px) 2.5px;
+  background-position: bottom right;
+  background-repeat: no-repeat;
+}
+.cv-nina__main-section h2 > span {
   padding-bottom: 0.3rem;
 }
 .cv-nina__main-section h2 .cv-nina__icon {
-  color: var(--cv-accent, #e8a825);
+  color: #333;
   width: 18px;
   height: 18px;
-  background: rgba(232, 168, 37, 0.12);
-  padding: 3px;
-  border-radius: 4px;
+  background: var(--cv-accent2, #e8a825);
+  padding: 5px;
+  border-radius: 50%;
+  align-self: flex-end;
   box-sizing: content-box;
 }
 .cv-nina__summary {
@@ -2652,7 +2997,7 @@ textarea { resize: vertical; }
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: var(--cv-accent, #e8a825);
+  background: var(--cv-accent2, #e8a825);
   transform: translateX(-0.5px);
 }
 .cv-nina__timeline-content {
@@ -2679,9 +3024,6 @@ textarea { resize: vertical; }
 }
 
 /* Education */
-.cv-nina__edu-item {
-  margin-bottom: 0.6rem;
-}
 .cv-nina__edu-degree {
   font-weight: 700;
   font-size: 0.88em;

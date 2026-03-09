@@ -18,6 +18,7 @@ const SECTION_TO_TAB: Record<string, Tab> = {
   languages: 'skills',
   interests: 'skills',
   projects: 'experience',
+  references: 'skills',
 }
 
 interface Props {
@@ -118,10 +119,12 @@ export function Editor({ cv, cvLanguage, onChange }: Props) {
             skills={cv.skills}
             languages={cv.languages}
             interests={cv.interests}
+            references={cv.references}
             lang={cvLanguage}
             onSkillsChange={(skills) => onChange({ ...cv, skills })}
             onLanguagesChange={(languages) => onChange({ ...cv, languages })}
             onInterestsChange={(interests) => onChange({ ...cv, interests })}
+            onReferencesChange={(references) => onChange({ ...cv, references })}
           />
         )}
       </div>

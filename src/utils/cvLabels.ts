@@ -19,6 +19,7 @@ export interface CVLabels {
   skillsAndExpertise: string
   contactDetails: string
   portfolio: string
+  references: string
 }
 
 const labels: Record<CVLanguage, CVLabels> = {
@@ -41,6 +42,7 @@ const labels: Record<CVLanguage, CVLabels> = {
     skillsAndExpertise: 'Skills & Expertise',
     contactDetails: 'Contact Details',
     portfolio: 'Portfolio',
+    references: 'References',
   },
   de: {
     profile: 'Profil',
@@ -61,6 +63,7 @@ const labels: Record<CVLanguage, CVLabels> = {
     skillsAndExpertise: 'Kenntnisse & Expertise',
     contactDetails: 'Kontaktdaten',
     portfolio: 'Portfolio',
+    references: 'Referenzen',
   },
   fr: {
     profile: 'Profil',
@@ -81,6 +84,7 @@ const labels: Record<CVLanguage, CVLabels> = {
     skillsAndExpertise: 'Compétences & Expertise',
     contactDetails: 'Coordonnées',
     portfolio: 'Portfolio',
+    references: 'Références',
   },
   it: {
     profile: 'Profilo',
@@ -101,6 +105,7 @@ const labels: Record<CVLanguage, CVLabels> = {
     skillsAndExpertise: 'Competenze & Expertise',
     contactDetails: 'Recapiti',
     portfolio: 'Portfolio',
+    references: 'Referenze',
   },
 }
 

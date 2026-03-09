@@ -29,7 +29,7 @@ export function ExportBar({ cv }: Props) {
   }
 
   function handleJSON() {
-    exportJSON(cv)
+    exportJSON({ cv })
     showToast(t('export.backupSaved'))
   }
 

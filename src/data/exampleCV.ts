@@ -109,4 +109,22 @@ export const EXAMPLE_CV: CV = {
     },
   ],
   interests: { en: ['Hiking', 'Open Source', 'Photography'] },
+  references: [
+    {
+      id: 'ex-ref-1',
+      name: 'Dr. Sarah Weber',
+      company: 'TechCorp AG',
+      position: 'Engineering Manager',
+      phone: '+41 44 123 45 67',
+      email: 'sarah.weber@techcorp.ch',
+    },
+    {
+      id: 'ex-ref-2',
+      name: 'Marco Bianchi',
+      company: 'WebSolutions GmbH',
+      position: 'CTO',
+      phone: '+41 31 987 65 43',
+      email: 'marco.bianchi@websolutions.ch',
+    },
+  ],
 }

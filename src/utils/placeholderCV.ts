@@ -13,6 +13,7 @@ export interface PlaceholderMap {
   languages: boolean
   certifications: boolean
   interests: boolean
+  references: boolean
 }
 
 export function buildDisplayCV(cv: CV, lang: CVLanguage): { displayCV: ResolvedCV; placeholders: PlaceholderMap } {
@@ -27,6 +28,7 @@ export function buildDisplayCV(cv: CV, lang: CVLanguage): { displayCV: ResolvedC
     languages: cv.languages.length === 0,
     certifications: cv.certifications.length === 0,
     interests: lsa(cv.interests, lang).length === 0,
+    references: cv.references.length === 0,
   }
 
   const resolved = resolveCV(cv, lang)
@@ -53,6 +55,7 @@ export function buildDisplayCV(cv: CV, lang: CVLanguage): { displayCV: ResolvedC
     projects: resolved.projects,
     certifications: placeholders.certifications ? exampleResolved.certifications : resolved.certifications,
     interests: placeholders.interests ? exampleResolved.interests : resolved.interests,
+    references: placeholders.references ? exampleResolved.references : resolved.references,
   }
 
   return { displayCV, placeholders }

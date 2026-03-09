@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { SkillGroup, LanguageEntry, CVLanguage, LocalizedStringArray } from '../../types/cv'
+import { SkillGroup, LanguageEntry, ReferenceEntry, CVLanguage, LocalizedStringArray } from '../../types/cv'
 import { ls, setLs, lsa, setLsa } from '../../utils/resolveCV'
 import { nanoid } from '../../utils/nanoid'
 import { useDragReorder } from '../../hooks/useDragReorder'
@@ -8,15 +8,17 @@ interface Props {
   skills: SkillGroup[]
   languages: LanguageEntry[]
   interests: LocalizedStringArray
+  references: ReferenceEntry[]
   lang: CVLanguage
   onSkillsChange: (skills: SkillGroup[]) => void
   onLanguagesChange: (languages: LanguageEntry[]) => void
   onInterestsChange: (interests: LocalizedStringArray) => void
+  onReferencesChange: (references: ReferenceEntry[]) => void
 }
 
 const LANGUAGE_LEVELS = ['Native', 'C2', 'C1', 'B2', 'B1', 'A2', 'A1']
 
-export function SkillsSection({ skills, languages, interests, lang, onSkillsChange, onLanguagesChange, onInterestsChange }: Props) {
+export function SkillsSection({ skills, languages, interests, references, lang, onSkillsChange, onLanguagesChange, onInterestsChange, onReferencesChange }: Props) {
   const { t } = useTranslation()
   const { dragHandlers: skillDragHandlers, handleProps: skillHandleProps } = useDragReorder(skills, onSkillsChange)
   const { dragHandlers: langDragHandlers, handleProps: langHandleProps } = useDragReorder(languages, onLanguagesChange)
@@ -63,6 +65,18 @@ export function SkillsSection({ skills, languages, interests, lang, onSkillsChan
 
   function cleanInterests() {
     onInterestsChange(setLsa(interests, lang, lsa(interests, lang).filter(Boolean)))
+  }
+
+  function addReference() {
+    onReferencesChange([...references, { id: nanoid(), name: '', company: '', position: '', phone: '', email: '' }])
+  }
+
+  function updateReference(id: string, patch: Partial<ReferenceEntry>) {
+    onReferencesChange(references.map((r) => (r.id === id ? { ...r, ...patch } : r)))
+  }
+
+  function removeReference(id: string) {
+    onReferencesChange(references.filter((r) => r.id !== id))
   }
 
   return (
@@ -185,6 +199,74 @@ export function SkillsSection({ skills, languages, interests, lang, onSkillsChan
           onBlur={cleanInterests}
         />
       </div>
+
+      <h3 className="editor-section__title" style={{ marginTop: '2rem' }}>
+        {t('editor.skills.referencesTitle')}
+      </h3>
+
+      {references.map((ref) => (
+        <div key={ref.id} className="editor-card editor-card--compact">
+          <div className="editor-card__header">
+            <span className="editor-card__index">{ref.name || t('editor.skills.refName')}</span>
+            <button className="btn-icon btn-danger" onClick={() => removeReference(ref.id)}>
+              {t('editor.skills.remove')}
+            </button>
+          </div>
+          <div className="field-row">
+            <div className="field">
+              <label>{t('editor.skills.refName')}</label>
+              <input
+                type="text"
+                placeholder={t('editor.skills.refNamePlaceholder')}
+                value={ref.name}
+                onChange={(e) => updateReference(ref.id, { name: e.target.value })}
+              />
+            </div>
+            <div className="field">
+              <label>{t('editor.skills.refPosition')}</label>
+              <input
+                type="text"
+                placeholder={t('editor.skills.refPositionPlaceholder')}
+                value={ref.position}
+                onChange={(e) => updateReference(ref.id, { position: e.target.value })}
+              />
+            </div>
+          </div>
+          <div className="field">
+            <label>{t('editor.skills.refCompany')}</label>
+            <input
+              type="text"
+              placeholder={t('editor.skills.refCompanyPlaceholder')}
+              value={ref.company}
+              onChange={(e) => updateReference(ref.id, { company: e.target.value })}
+            />
+          </div>
+          <div className="field-row">
+            <div className="field">
+              <label>{t('editor.skills.refPhone')}</label>
+              <input
+                type="text"
+                placeholder={t('editor.skills.refPhonePlaceholder')}
+                value={ref.phone}
+                onChange={(e) => updateReference(ref.id, { phone: e.target.value })}
+              />
+            </div>
+            <div className="field">
+              <label>{t('editor.skills.refEmail')}</label>
+              <input
+                type="text"
+                placeholder={t('editor.skills.refEmailPlaceholder')}
+                value={ref.email}
+                onChange={(e) => updateReference(ref.id, { email: e.target.value })}
+              />
+            </div>
+          </div>
+        </div>
+      ))}
+
+      <button className="btn-add-entry" onClick={addReference}>
+        {t('editor.skills.addReference')}
+      </button>
     </section>
   )
 }

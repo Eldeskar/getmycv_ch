@@ -59,6 +59,7 @@ export function migrateCV(raw: Record<string, unknown>): CV {
         })) as CV['certifications']
       : [],
     interests: migrateStringArray(raw.interests),
+    references: (raw.references ?? []) as CV['references'],
   }
   return cv
 }

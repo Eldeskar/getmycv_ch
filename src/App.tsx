@@ -28,22 +28,25 @@ export default function App() {
     function onKeyDown(e: KeyboardEvent) {
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault()
-        import('./utils/export').then(({ exportJSON }) => exportJSON(cv))
+        import('./utils/export').then(({ exportJSON }) => exportJSON({ cv, selectedTemplate, styleSettings, cvLanguage }))
       }
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [cv])
 
-  // Listen for imported CV from ExportBar
+  // Listen for imported CV backup from RightSidebar
   useEffect(() => {
     function onImport(e: Event) {
-      const imported = (e as CustomEvent).detail
-      updateCV(imported)
+      const backup = (e as CustomEvent).detail
+      updateCV(backup.cv)
+      if (backup.selectedTemplate) updateTemplate(backup.selectedTemplate)
+      if (backup.styleSettings) updateStyleSettings(backup.styleSettings)
+      if (backup.cvLanguage) switchCVLanguage(backup.cvLanguage)
     }
     window.addEventListener('cv:import', onImport)
     return () => window.removeEventListener('cv:import', onImport)
-  }, [updateCV])
+  }, [updateCV, updateTemplate, updateStyleSettings, switchCVLanguage])
 
   return (
     <div className="app">
@@ -78,6 +81,7 @@ export default function App() {
             style={{
               '--cv-font': styleSettings.fontFamily,
               '--cv-accent': styleSettings.accentColor,
+              '--cv-accent2': styleSettings.accentColor2,
             } as React.CSSProperties}
           >
             <Preview cv={cv} template={selectedTemplate} sectionOrder={styleSettings.sectionOrder} cvLanguage={cvLanguage} />

@@ -12,6 +12,7 @@ import { OriginalTemplate } from './templates/Original'
 import { SharpTemplate } from './templates/Sharp'
 import { ElegantTemplate } from './templates/Elegant'
 import { NinaTemplate } from './templates/Nina'
+import { MorganTemplate } from './templates/Morgan'
 
 interface Props {
   cv: CV
@@ -38,6 +39,7 @@ export function Preview({ cv, template, sectionOrder, cvLanguage }: Props) {
       {template === 'sharp' && <SharpTemplate cv={displayCV} placeholders={placeholders} sectionOrder={sectionOrder} labels={labels} locale={cvLanguage} />}
       {template === 'elegant' && <ElegantTemplate cv={displayCV} placeholders={placeholders} sectionOrder={sectionOrder} labels={labels} locale={cvLanguage} />}
       {template === 'nina' && <NinaTemplate cv={displayCV} placeholders={placeholders} sectionOrder={sectionOrder} labels={labels} locale={cvLanguage} />}
+      {template === 'morgan' && <MorganTemplate cv={displayCV} placeholders={placeholders} sectionOrder={sectionOrder} labels={labels} locale={cvLanguage} />}
     </>
   )
 }

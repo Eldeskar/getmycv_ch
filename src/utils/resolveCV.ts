@@ -89,6 +89,14 @@ export interface ResolvedCV {
     description: string
   }[]
   interests: string[]
+  references: {
+    id: string
+    name: string
+    company: string
+    position: string
+    phone: string
+    email: string
+  }[]
 }
 
 /** Resolves all localized fields in a CV for the given language. */
@@ -121,5 +129,6 @@ export function resolveCV(cv: CV, lang: CVLanguage): ResolvedCV {
       description: ls(cert.description, lang),
     })),
     interests: lsa(cv.interests, lang),
+    references: cv.references,
   }
 }

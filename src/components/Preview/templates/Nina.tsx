@@ -24,12 +24,18 @@ export function NinaTemplate({ cv, placeholders: p, sectionOrder, labels, locale
   const iconExp = icon('M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z')
   const iconEdu = icon('M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z')
   const iconPortfolio = icon('M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z')
+  const iconCert = icon('M12 2a7 7 0 00-7 7c0 2.86 1.72 5.32 4.18 6.4L7 22l5-3 5 3-2.18-6.6A7.003 7.003 0 0012 2zm0 12a5 5 0 110-10 5 5 0 010 10z')
+  const iconLanguage = (
+    <svg className="cv-nina__icon" viewBox="0 0 24 24" fill="currentColor" style={{ transform: 'scaleX(-1)' }}>
+      <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm0 15.17L18.83 16H4V4h16v13.17z" />
+    </svg>
+  )
 
   /* ── Sidebar sections ── */
   const sidebarSections: Record<string, () => React.ReactNode> = {
     skills: () => skills.length > 0 ? (
       <div className={`cv-nina__sidebar-section${p?.skills ? ' cv-placeholder' : ''}`}>
-        <h3>{iconPin} {labels.skills}</h3>
+        <h3>{iconPin} <span>{labels.skills}</span></h3>
         {skills.map((group) => (
           <div key={group.id} className="cv-nina__skill-group">
             {group.category && <div className="cv-nina__skill-cat">{group.category}</div>}
@@ -54,7 +60,7 @@ export function NinaTemplate({ cv, placeholders: p, sectionOrder, labels, locale
 
     languages: () => languages.length > 0 ? (
       <div className={`cv-nina__sidebar-section${p?.languages ? ' cv-placeholder' : ''}`}>
-        <h3>{labels.languages}</h3>
+        <h3>{iconLanguage} <span>{labels.languages}</span></h3>
         {languages.map((lang) => (
           <div key={lang.id} className="cv-nina__lang-item">
             <span>{lang.language}</span>
@@ -66,7 +72,7 @@ export function NinaTemplate({ cv, placeholders: p, sectionOrder, labels, locale
 
     interests: () => interests.length > 0 ? (
       <div className={`cv-nina__sidebar-section${p?.interests ? ' cv-placeholder' : ''}`}>
-        <h3>{iconHeart} {labels.interests}</h3>
+        <h3>{iconHeart} <span>{labels.interests}</span></h3>
         <ul className="cv-nina__interest-list">
           {interests.map((item) => <li key={item}>{item}</li>)}
         </ul>
@@ -75,7 +81,7 @@ export function NinaTemplate({ cv, placeholders: p, sectionOrder, labels, locale
 
     certifications: () => certifications.length > 0 ? (
       <div className={`cv-nina__sidebar-section${p?.certifications ? ' cv-placeholder' : ''}`}>
-        <h3>{labels.certifications}</h3>
+        <h3>{iconCert} <span>{labels.certifications}</span></h3>
         {certifications.map((cert) => (
           <div key={cert.id} className="cv-nina__cert-item">
             <strong>{cert.title}</strong>
@@ -91,14 +97,14 @@ export function NinaTemplate({ cv, placeholders: p, sectionOrder, labels, locale
   const mainSections: Record<string, () => React.ReactNode> = {
     summary: () => personal.summary ? (
       <div className={`cv-nina__main-section${p?.summary ? ' cv-placeholder' : ''}`}>
-        <h2>{iconProfile} {labels.profile}</h2>
+        <h2>{iconProfile} <span>{labels.profile}</span></h2>
         <p className="cv-nina__summary">{personal.summary}</p>
       </div>
     ) : null,
 
     experience: () => experience.length > 0 ? (
       <div className={`cv-nina__main-section${p?.experience ? ' cv-placeholder' : ''}`}>
-        <h2>{iconExp} {labels.experience}</h2>
+        <h2>{iconExp} <span>{labels.experience}</span></h2>
         <div className="cv-nina__timeline">
           {experience.map((exp) => (
             <div key={exp.id} className="cv-nina__timeline-item">
@@ -123,24 +129,29 @@ export function NinaTemplate({ cv, placeholders: p, sectionOrder, labels, locale
 
     education: () => education.length > 0 ? (
       <div className={`cv-nina__main-section${p?.education ? ' cv-placeholder' : ''}`}>
-        <h2>{iconEdu} {labels.education}</h2>
-        {education.map((edu) => (
-          <div key={edu.id} className="cv-nina__edu-item">
-            <div className="cv-nina__edu-degree">
-              {edu.degree}{edu.field ? ` in ${edu.field}` : ''}
+        <h2>{iconEdu} <span>{labels.education}</span></h2>
+        <div className="cv-nina__timeline">
+          {education.map((edu) => (
+            <div key={edu.id} className="cv-nina__timeline-item">
+              <div className="cv-nina__timeline-dot" />
+              <div className="cv-nina__timeline-content">
+                <div className="cv-nina__edu-degree">
+                  {edu.degree}{edu.field ? ` in ${edu.field}` : ''}
+                </div>
+                <div className="cv-nina__edu-inst">
+                  {edu.institution}{edu.startDate ? ` | ${[edu.startDate, edu.endDate].filter(Boolean).map(d => formatDate(d, locale)).join(' – ')}` : ''}
+                </div>
+                {edu.grade && <div className="cv-nina__edu-grade">{labels.grade}: {edu.grade}</div>}
+              </div>
             </div>
-            <div className="cv-nina__edu-inst">
-              {edu.institution}{edu.startDate ? ` | ${[edu.startDate, edu.endDate].filter(Boolean).map(d => formatDate(d, locale)).join(' – ')}` : ''}
-            </div>
-            {edu.grade && <div className="cv-nina__edu-grade">{labels.grade}: {edu.grade}</div>}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     ) : null,
 
     projects: () => cv.projects.length > 0 ? (
       <div className="cv-nina__main-section">
-        <h2>{iconPortfolio} {labels.portfolio}</h2>
+        <h2>{iconPortfolio} <span>{labels.portfolio}</span></h2>
         {cv.projects.map((proj) => (
           <div key={proj.id} className="cv-nina__project-item">
             <span className="cv-nina__project-name">{proj.name}</span>
@@ -169,7 +180,7 @@ export function NinaTemplate({ cv, placeholders: p, sectionOrder, labels, locale
 
         {/* Contact */}
         <div className={`cv-nina__sidebar-section cv-nina__contact${p?.contact ? ' cv-placeholder' : ''}`} data-cv-section="personal">
-          <h3>{iconPhone} {labels.contact}</h3>
+          <h3>{iconPhone} <span>{labels.contact}</span></h3>
           {personal.email && (
             <div className="cv-nina__contact-group">
               <div className="cv-nina__contact-label">Email</div>

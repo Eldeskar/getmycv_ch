@@ -4,19 +4,20 @@ import { useTranslation } from 'react-i18next'
 import { CV, TemplateId, DEFAULT_STYLE } from '../types/cv'
 import { Preview } from './Preview'
 
-const TEMPLATE_IDS: TemplateId[] = ['modern', 'classic', 'minimal', 'executive', 'professional', 'creative', 'original', 'sharp', 'elegant', 'nina']
+const TEMPLATE_IDS: TemplateId[] = ['modern', 'classic', 'minimal', 'executive', 'professional', 'creative', 'original', 'sharp', 'elegant', 'nina', 'morgan']
 const A4_WIDTH = 794 // 210mm at 96dpi
 
 interface Props {
   selected: TemplateId
   accentColor: string
+  accentColor2: string
   cv: CV
   onSelect: (id: TemplateId) => void
   onClose: () => void
 }
 
 /** Measures its own width and scales inner 794px content to fit. */
-function Thumbnail({ id, accentColor, cv }: { id: TemplateId; accentColor: string; cv: CV }) {
+function Thumbnail({ id, accentColor, accentColor2, cv }: { id: TemplateId; accentColor: string; accentColor2: string; cv: CV }) {
   const ref = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(0)
 
@@ -37,6 +38,7 @@ function Thumbnail({ id, accentColor, cv }: { id: TemplateId; accentColor: strin
         style={{
           '--cv-font': DEFAULT_STYLE.fontFamily,
           '--cv-accent': accentColor,
+          '--cv-accent2': accentColor2,
           '--cv-font-size': '100%',
           transform: `scale(${scale})`,
         } as React.CSSProperties}
@@ -47,7 +49,7 @@ function Thumbnail({ id, accentColor, cv }: { id: TemplateId; accentColor: strin
   )
 }
 
-export function TemplatePicker({ selected, accentColor, cv, onSelect, onClose }: Props) {
+export function TemplatePicker({ selected, accentColor, accentColor2, cv, onSelect, onClose }: Props) {
   const { t } = useTranslation()
 
   const onKeyDown = useCallback((e: KeyboardEvent) => {
@@ -78,7 +80,7 @@ export function TemplatePicker({ selected, accentColor, cv, onSelect, onClose }:
               className={`tpl-picker__card${selected === id ? ' tpl-picker__card--active' : ''}`}
               onClick={() => handleSelect(id)}
             >
-              <Thumbnail id={id} accentColor={accentColor} cv={cv} />
+              <Thumbnail id={id} accentColor={accentColor} accentColor2={accentColor2} cv={cv} />
               <div className="tpl-picker__label">{t(`templates.${id}.name`)}</div>
             </button>
           ))}
